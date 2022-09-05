@@ -1,0 +1,38 @@
+﻿<!--Страница определенного проекта-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using WebSite.Models;
+@model Projects
+
+
+    
+<section class="header">
+    <div class="parallax_inner">
+        @{
+            if (Model != null)
+            {
+            <div class="container">
+                <div class="mb-50 head view-category">
+                    <div  class="div-title-view">
+                        <h2 class="mb-25">@Model.Title</h2>
+                    </div>
+                    <div class="div-img-view">
+                        <img src="@Model.Image"/>
+                    </div>
+                </div>
+
+                <div class="row courses">
+                    @Html.Raw(Model.Description)
+                </div>
+            </div>
+            }
+        }
+    </div>
+</section>
+
+    
+
+
+
+

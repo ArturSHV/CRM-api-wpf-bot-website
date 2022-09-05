@@ -1,0 +1,181 @@
+﻿<!--Главная страница-->
+@using WebSite.Models
+@model MainPageModel
+
+@{
+    ViewData["title"] = "Главная страница";
+    string title = "IT-консалтинг<br>без регистрации и СМС";
+    string placeholder = "Оставьте заявку или задайте вопрос";
+    string buttonText = "Отправить";
+
+    if (Model != null)
+    {
+        title = Model.Title;
+        placeholder = Model.Placeholder;
+        buttonText = Model.ButtonText;
+    }
+}
+
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<title>@ViewData["title"]</title>
+<!--=================================
+Meta tags
+=================================-->
+<meta name="description" content="">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no" />
+<!--=================================
+Style Sheets
+=================================-->
+<link href='http://fonts.googleapis.com/css?family=Cabin:400,500,600,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Dancing+Script:400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="~/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="~/css/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="~/css/animations.css">
+<link rel="stylesheet" type="text/css" href="~/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="~/css/jquery.flickr.css">
+<link rel="stylesheet" type="text/css" href="~/css/prettyPhoto.css">
+<link rel="stylesheet" type="text/css" href="~/css/main.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script async src="~/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+</head>
+<body class="eschool" data-spy="scroll" data-target="#navbar" data-offset="70">
+
+<!--====================================
+Body Content
+=======================================-->
+<form asp-controller="Admin" asp-action="EditMainPage" enctype="multipart/form-data" method="post">
+<div class="navbar-custom">
+    <label for="file-input">
+        <div style="overflow: hidden; height: 125px; position: fixed; width: 100%; margin-top: -80px;">
+        <img src="~/img/header.jpg" id="previewImg" style="width:100%;"/>
+        </div>
+    </label>
+    <input disabled id="file-input" accept=".png, .jpg, .jpeg" name="formFile" type="file" onchange="previewFile(this);" style="display: none;" />
+    
+    <div class="container">
+        <a asp-controller="Admin" asp-action="Index" class="logo"><img src="~/img/logo.png" alt=""></a>
+        <nav id="navbar">
+            <a href="#" class="nav-triger"><span class="fa fa-navicon"></span></a>
+            <ul class="main-menu nav">
+                <li><a asp-controller="Admin" asp-action="Index">Рабочий стол</a></li>
+                <li><a asp-controller="Admin" asp-action="Home">Главная</a></li>
+                <li><a asp-controller="Admin" asp-action="Services">Услуги</a></li>
+                <li><a asp-controller="Admin" asp-action="Projects">Проекты</a></li>
+                <li><a asp-controller="Admin" asp-action="Blogs">Блог</a></li>
+                <li><a asp-controller="Admin" asp-action="Contacts">Контакты</a></li>
+            </ul>
+        </nav>
+        
+    </div>
+</div>
+     
+    
+    <section class="header">
+        <div class="container">
+    
+            <div class="headerInner" id="edit">
+                <h2>@Html.Raw(title)</h2>
+                
+                <div class="row mt-30">
+                    <div class="col-md-4 col-sm-6">
+                        
+                        <p>@Html.Raw(placeholder)</p>
+    
+                        <input type="text" placeholder="Ваше имя" disabled>
+                        
+                        <input type="email" placeholder="Ваш email" disabled>
+                        
+                        <textarea placeholder="Ваш текст" disabled></textarea>
+                        
+                        <input type="button" value="@buttonText" class="btn btn-default btn-head mt-20 mb-50" disabled/>
+                    </div>
+                </div>
+                <button  id="btn" type="button" style="margin-bottom: 20px; float:right">Редактировать</button>
+            </div>
+    
+    
+            <div class="headerInner display-none" id="formSend">
+                <input value="@title" asp-for="Title"/>
+                <div class="row mt-30">
+                    <div class="col-md-4 col-sm-6">
+                        
+                       <input value="@placeholder" asp-for="Placeholder"/>
+    
+                       <input type="text" placeholder="Ваше имя" disabled>
+                       
+                       <input type="email" placeholder="Ваш email" disabled>
+                       
+                       <textarea placeholder="Ваш текст" disabled></textarea>
+                       
+                       <input asp-for="ButtonText" value="@buttonText"/>
+                       
+                       <input value="" id="hiddenImage" name="formFile" type="file"  style="display: none;"/>
+    
+                    </div>
+                </div>
+                <input type="submit" style="margin-bottom: 20px; float:right" value="Сохранить"/><br>
+            </div>
+            
+            
+    
+        </div>
+    </section>
+</form>  
+
+
+<script>
+    $('#btn').click(function() {
+        $('#file-input').removeAttr('disabled');
+        $('#formSend').toggleClass('headerInner display-show');
+        $('#edit').toggleClass('display-none');
+    });
+</script> 
+
+<script>
+    function previewFile(input){
+        var file = $("input[type=file]").get(0).files[0];
+    
+        if(file){
+          var reader = new FileReader();
+    
+          reader.onload = function(){
+              $("#previewImg").attr("src", reader.result);
+          }
+    
+          reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+
+
+<footer class="text-center color-white text-bold">
+    <span>© Новая компания, 2022 | Все права защищены</span>
+</footer>
+<!--===============================
+Script Source
+=================================-->
+
+<script src="~/js/jquery.js"></script>
+<script src="~/js/jquery.stellar.min.js"></script>
+<script src="~/js/owl.carousel.min.js"></script>
+<script src="~/js/jquery.easing-1.3.pack.js"></script>
+<script src="~/js/jflickrfeed.min.js"></script>
+<script src="~/js/jquery.prettyPhoto.js"></script>
+<script src="~/js/bootstrap-scrollspy.min.js"></script>
+<script src="~/js/main.js"></script>
+<script src="~/js/ajax.js" asp-append-version="true"></script>
+
+</body>
+</html>
+
+  
+
+
+
+

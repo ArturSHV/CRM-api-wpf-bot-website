@@ -1,0 +1,38 @@
+﻿<!--Страница добавления услуги-->
+@{
+    ViewData["title"] = "Добавить новую услугу";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@using WebSite.Models;
+@model Services;
+
+
+
+    
+<section class="header">
+    <div class="parallax_inner">
+        <form asp-controller="Admin" asp-action="AddService" enctype="multipart/form-data" method="post" id="formSend">
+            <div class="container">
+                <div class="text-center mb-50 head">
+                    <h2 class="mb-25"><input type="text" value="" placeholder="Название" asp-for="Title" required/></h2>
+                </div>
+                <div class="row courses">
+                    <div>
+                        
+                        <input class="add_text" type="button" value="Перенос строки">
+                        <input class="add_text" type="button" value="Открыть абзац">
+                        <input class="add_text" type="button" value="Закрыть абзац">
+                        <input class="add_text" type="button" value="Открыть жирный шрифт">
+                        <input class="add_text" type="button" value="Закрыть жирный шрифт">
+
+                        <textarea asp-for="Description" id="info_sms_id" required placeholder="Описание"></textarea>
+                    </div>
+                    <input type="submit" style="margin-bottom: 20px;" value="Сохранить"/><br>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+<script src="~/js/write-helper.js"></script>

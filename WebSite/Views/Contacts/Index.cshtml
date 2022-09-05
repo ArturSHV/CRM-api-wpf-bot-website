@@ -1,0 +1,44 @@
+﻿<!--Страница контактов-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using WebSite.Models;
+@model Contacts
+
+
+    
+<section class="header">
+    <div class="parallax_inner">
+        @{
+            if (Model != null)
+            {
+            <div class="container">
+                <div class="mb-50 head view-category">
+                    <div  class="div-title-view">
+                        <h2 class="mb-25">@Model.Title</h2>
+                    </div>
+                    
+                </div>
+
+                <div class="row courses">
+                    <div style="display:flex">
+                        <div style="width:30%">
+                            @Html.Raw(Model.Description)
+                        </div>
+                        
+                        <div style="width:70%">
+                            @Html.Raw(Model.MapScript)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        }
+    </div>
+</section>
+
+    
+
+
+
+

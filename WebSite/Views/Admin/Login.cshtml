@@ -1,0 +1,30 @@
+﻿<!--Страница регистрации-->
+@using WebSite.Models
+@model Account
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="header">
+    
+    <div class="parallax_inner">
+        <div class="container">
+            <div class="text-center mb-50 head">
+                <h2 class="mb-25">Авторизация</h2>
+            </div>
+            <div class="row courses">
+                <div style="max-width: 350px; position: relative; margin: 0 auto;">
+                        <p>@ViewData["Message"]</p>
+                        <form asp-controller="Admin" asp-action="Login" method="post">
+                            <input type="text" asp-for="Login" placeholder="Введите логин" required style="max-width:350px"/>
+                            <input id="pass" type="password" asp-for="Password" placeholder="Введите пароль" required style="max-width:350px"/>
+                            <input type="submit" value="Войти" class="btn btn-default btn-head mt-20 mb-50"/>
+                        </form>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+   

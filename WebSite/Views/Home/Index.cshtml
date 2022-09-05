@@ -1,0 +1,62 @@
+﻿<!--Главная страница-->
+@using WebSite.Models
+@model MainPageModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    string title = "IT-консалтинг<br>без регистрации и СМС";
+    string placeholder = "Оставьте заявку или задайте вопрос";
+    string buttonText = "Отправить";
+
+    if (Model != null)
+    {
+        title = Model.Title;
+        placeholder = Model.Placeholder;
+        buttonText = Model.ButtonText;
+    }
+}
+    
+<section id="section0" class="header">
+    <div class="container">
+        <div class="headerInner">
+            <h2>@Html.Raw(title)</h2>
+            
+            <div class="row mt-30">
+                <div class="col-md-4 col-sm-6">
+
+                    <form id="feedback-form" action="">
+                        <p>@Html.Raw(placeholder)</p>
+                        <input type="text" id="username" name="name" onkeyup="check();" required placeholder="Ваше имя">
+                        
+                        <input type="email" id="useremail" name="email" onkeyup="check();" required placeholder="Ваш email">
+                        
+                        <textarea name="text" id="usertext" onkeyup="check();" required placeholder="Ваш текст"></textarea>
+                        
+                        <input type="submit" id="submitButton" onkeyup="check();" value="@Html.Raw(buttonText)" class="btn btn-default btn-head mt-20 mb-50" disabled>
+                    
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--Активация кнопки при заполнении информации-->
+<script>
+function check() {
+    var username = '#username';
+    var useremail = '#useremail';
+    var usertext = '#usertext';
+    var button = '#submitButton';
+    
+    if (($(username).val() != '') && ($(useremail).val() != '') && ($(usertext).val() != ''))
+        $(button).removeAttr('disabled');
+    else
+        $(button).attr('disabled','disable');
+}
+</script>

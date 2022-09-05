@@ -1,0 +1,65 @@
+﻿<!--Страница блогов-->
+@using WebSite.Models
+@model List<Blogs>
+
+@{
+    ViewData["title"] = "Блоги";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+    
+<section class="header">
+    
+    <div class="parallax_inner">
+        <div class="container">
+            <div class="text-center mb-50 head">
+                <h2 class="mb-25">@ViewData["title"]</h2>
+            </div>
+            <div class="row courses">
+                @{
+                    if (Model!= null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            string shortDescription = "";
+                            if (item.Description.Length > 100)
+                                shortDescription = item.Description.Substring(0, 100);
+                            
+                            else
+                                shortDescription = item.Description;
+
+                            <div class="col-md-4 col-sm-6 course clearfix div-background" style="cursor:pointer" onClick="document.location='ViewBlog/@item.Id'">
+                                <div class="course_inner">
+                                     <div class="info">
+                                        <div class="div-image-blog">
+                                            <img alt="@item.Title" src="@item.Image">
+                                        </div>
+                                        <p  class="text-bold name-project">@item.Title</p>
+                                        <div class="color-short-description-blog">@Html.Raw(shortDescription)...</div>
+                                     </div>
+                                </div>
+                            </div>
+    
+                        }
+                    }
+                    <div class="col-md-4 col-sm-6 course clearfix div-background" style="cursor:pointer" onClick="document.location='AddBlog'">
+                        <div class="course_inner">
+                            <div class="info">
+                               <div class="div-image-blog">
+                                   <img alt="Добавить новый блог" src="~/img/png-clipart-plus-plus.png">
+                               </div>
+                               <p  class="text-bold name-project">Добавить новый блог</p>
+                               <div class="color-short-description-blog"></div>
+                            </div>
+                        </div>
+                     </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+    
+
+
+
+

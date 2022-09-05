@@ -1,0 +1,81 @@
+﻿<!--Страница контактов-->
+@{
+    ViewData["title"] = "Контакты";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@using WebSite.Models;
+@model Contacts
+
+
+    
+<section class="header">
+    <div class="parallax_inner">
+        @{
+            if (Model != null)
+            {
+                <form asp-controller="Admin" asp-action="EditContacts" enctype="multipart/form-data" method="post" class="display-none" id="formSend">
+                    <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                    <div class="container">
+                        <div class="text-center mb-50 head">
+                            <h2 class="mb-25"><input type="text" value="@Model.Title" asp-for="Title" required/></h2>
+                        </div>
+                        <div class="row courses">
+                            <input type="submit" style="margin-bottom: 20px;" value="Сохранить"/><br>
+
+                            <input class="add_text" type="button" value="Перенос строки">
+                            <input class="add_text" type="button" value="Открыть абзац">
+                            <input class="add_text" type="button" value="Закрыть абзац">
+                            <input class="add_text" type="button" value="Открыть жирный шрифт">
+                            <input class="add_text" type="button" value="Закрыть жирный шрифт">
+
+                            <div style="display:flex">
+                                <div style="width: 30%;margin-left: 20px;">
+                                   <textarea asp-for="Description" id="info_sms_id" required>@Model.Description</textarea>
+                                </div>
+
+                                <div style="width: 70%;margin-left: 20px;">
+                                   <textarea asp-for="MapScript" required>@Model.MapScript</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+                <div class="container" id="edit">
+                    <div class="mb-50 head view-category">
+                        <div  class="div-title-view">
+                        <h2 class="mb-25">@Model.Title</h2>
+                    </div>
+                    
+                    </div>
+                    <div class="row courses">
+                        <button  id="btn" type="button" style="margin-bottom: 20px;">Редактировать</button><br>
+                        
+                        <div style="display:flex">
+                        <div style="width:30%">
+                            @Html.Raw(Model.Description)
+                        </div>
+                        
+                        <div style="width:70%">
+                            @Html.Raw(Model.MapScript)
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+
+
+<script>
+    $('#btn').click(function() {
+    $('#formSend').toggleClass('display-show');
+    $('#edit').toggleClass('display-none');
+    });
+</script>   
+
+<script src="~/js/write-helper.js"></script>
+
+

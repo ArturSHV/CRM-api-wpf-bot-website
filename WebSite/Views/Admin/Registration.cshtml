@@ -1,0 +1,68 @@
+﻿<!--Страница регистрации-->
+@using WebSite.Models
+@model Account
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    
+<section class="header">
+    
+    <div class="parallax_inner">
+        <div class="container">
+            <div class="text-center mb-50 head">
+                <h2 class="mb-25">Регистрация</h2>
+            </div>
+            <div class="row courses">
+                <div style="max-width: 350px; position: relative; margin: 0 auto;">
+                        <p>@ViewData["Message"]</p>
+                        <form asp-controller="Admin" asp-action="Registration" method="post" onsubmit="return validateMyForm();">
+                            <input type="text" asp-for="Login" placeholder="Введите логин" required style="max-width:350px"/>
+                            <input id="pass" type="password" asp-for="Password" placeholder="Введите пароль" required style="max-width:350px"/>
+                            <div id="errorBlock"></div>
+                            <input id="pass2" type="password" placeholder="Повторите пароль" required style="max-width:350px"/>
+                            <input type="submit" value="Зарегистрироваться" class="btn btn-default btn-head mt-20 mb-50"/>
+                        </form>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+   
+<script>
+    function validateMyForm(){
+            var pass = document.getElementById('pass').value;
+            var pass2 = document.getElementById('pass2').value;
+            if (pass != pass2)
+            {
+                alert('Пароли не совпадают');
+                return false;
+            }
+            else
+                return true;
+            
+        };
+
+    $(document).ready(function() {
+        $('#pass2, #pass').keyup(function() {
+            var pass = $("#pass").val();
+            var pass2 = $("#pass2").val();
+
+            if (pass != pass2) {
+                $("#pass2").css('border', 'red 1px solid');
+                $('#errorBlock').html('Пароли не совпадают');
+            }
+            else
+            {
+                $("#pass2").css('border', 'none');
+                $('#errorBlock').html('');
+            }
+        });
+
+        
+    });
+</script>
+
+
+

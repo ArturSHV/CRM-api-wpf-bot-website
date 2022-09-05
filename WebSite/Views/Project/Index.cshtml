@@ -1,0 +1,46 @@
+﻿
+<!--Страница проектов-->
+@using WebSite.Models
+@model List<Projects>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    
+<section class="header">
+    
+    <div class="parallax_inner">
+        <div class="container">
+            <div class="text-center mb-50 head">
+                <h2 class="mb-25">Проекты</h2>
+            </div>
+            <div class="row courses">
+                @{
+                    if (Model!= null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <div class="col-md-4 col-sm-6 course text-bold clearfix div-background" style="cursor:pointer" onClick="document.location='Project/View/@item.Id'">
+                                 <div class="course_inner">
+                                      <div class="info">
+                                         <div class="div-image-blog">
+                                            <img alt="@item.Title" src="@item.Image">
+                                         </div>
+                                         <p class="name-project">@item.Title</p>
+                                      </div>
+                                 </div>
+                            </div>
+    
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+    
+
+
+
+
