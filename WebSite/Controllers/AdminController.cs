@@ -524,7 +524,7 @@ namespace WebSite.Controllers
                     s = new()
                     {
                         messageStatus = messageWithStatus.messageStatus
-                        .Where(x => x.date == today).ToList(),
+                        .Where(x => x.date.ToShortDateString() == today.ToShortDateString()).ToList(),
                         statuses = messageWithStatus.statuses
                     };
                 }
@@ -534,7 +534,7 @@ namespace WebSite.Controllers
                     s = new()
                     {
                         messageStatus = messageWithStatus.messageStatus
-                        .Where(x => x.date == yesterday).ToList(),
+                        .Where(x => x.date.ToShortDateString() == yesterday.ToShortDateString()).ToList(),
                         statuses = messageWithStatus.statuses
                     };
                 }

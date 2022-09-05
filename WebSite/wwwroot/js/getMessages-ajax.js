@@ -145,7 +145,7 @@ $(document).ready(() => {
                     var month = splitDate[1];
                     var day = splitDate[2];
 
-                    var date = day + '.' + month + '.' + year + ' ' + time;
+                    var date = day + '.' + month + '.' + year + ' ' + time.substring(0, 8);
 
                     string += `<tr>`+
                            `<td>${data.messageStatus[i].id}</td>`+
