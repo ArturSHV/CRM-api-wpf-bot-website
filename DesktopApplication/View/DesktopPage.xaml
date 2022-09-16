@@ -1,0 +1,331 @@
+﻿<Page x:Class="DesktopApplication.View.DesktopPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DesktopApplication.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Desktop"
+    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+
+    <!--Стили комбобокса-->
+    <Page.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="White"/>
+        <!--бекграунд комбобокса при наведении-->
+        <LinearGradientBrush x:Key="ComboBox.MouseOver.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FF414C59" Offset="0.0"/>
+            <GradientStop Color="#FF414C59" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#FF414C59"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="White"/>
+        <LinearGradientBrush x:Key="ComboBox.Pressed.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FF414C59" Offset="0.0"/>
+            <GradientStop Color="#FF414C59" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Border" Color="#FF414C59"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Glyph" Color="White"/>
+        <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="ClickMode" Value="Press"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="templateRoot" Background="Transparent" BorderBrush="#FF414A54" BorderThickness="0,0,1,0" SnapsToDevicePixels="true">
+                            <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="true" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
+                                <Path x:Name="arrow" Data="F1 M 0,0 L 2.667,2.66665 L 5.3334,0 L 5.3334,-1.78168 L 2.6667,0.88501 L0,-1.78168 L0,0 Z" Fill="{StaticResource ComboBox.Static.Glyph}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Border}"/>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
+            <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+                    <theme:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                        <Border x:Name="dropDownBorder" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1">
+                            <ScrollViewer x:Name="DropDownScrollViewer">
+                                <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                    <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                        <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                    </Canvas>
+                                    <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+                    </theme:SystemDropShadowChrome>
+                </Popup>
+                <ToggleButton x:Name="toggleButton" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
+                <!--Выравнивание контента в комбобоксе-->
+                <ContentPresenter x:Name="contentPresenter" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" Content="{TemplateBinding SelectionBoxItem}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" HorizontalAlignment="Center" IsHitTestVisible="false" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
+                    <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
+                    <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="ComboBoxStyle1" TargetType="{x:Type ComboBox}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="6,3,5,3"/>
+            <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Name="grid">
+        <Grid.Background>
+            <SolidColorBrush Color="#353e48"/>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="0"
+                              Name="WidthRightMenu"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+
+        <!--Левая панель фильтра по дням-->
+        <StackPanel Grid.Column="7" 
+                    Grid.RowSpan="4">
+
+            <Button Content="Фильтр" 
+                    Height="40"
+                    Style="{DynamicResource MenuHeaderStyle}"/>
+
+            <Button Content="Сегодня"
+                Click="BtnTodayClick"
+                Style="{DynamicResource BtnMainLeftMenuStyle}"/>
+
+            <Button Content="Вчера" 
+                Click="BtnYesterdayClick"
+                Style="{DynamicResource BtnMainLeftMenuStyle}"/>
+
+            <Button Content="Неделя"
+                Click="BtnWeekClick"
+                Style="{DynamicResource BtnMainLeftMenuStyle}"/>
+
+            <Button Content="Месяц"
+                Click="BtnMonthClick"
+                Style="{DynamicResource BtnMainLeftMenuStyle}"/>
+
+
+            <Button Content="За период" 
+                    Height="40"
+                    Style="{DynamicResource MenuHeaderStyle}"/>
+
+            <!--Календарь-->
+            <DockPanel Margin="0,10,0,10">
+                <DatePicker Name="datePicker1" 
+                            SelectedDateFormat="Short" 
+                            Width="85"
+                            Margin="5,0,0,0"/>
+                <TextBlock Text=" - "
+                           Foreground="White"
+                           HorizontalAlignment="Center"/>
+
+                <DatePicker Name="datePicker2" 
+                            SelectedDateFormat="Short" 
+                            Width="85"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,5,0"/>
+            </DockPanel>
+
+            <Button Content="Показать"
+                    Style="{DynamicResource SaveButton}"
+                    Click="BtnPeriodClick" 
+                    Width="183"/>
+
+        </StackPanel>
+
+        <!--Список фильтрации по статусам-->
+        <ComboBox Style="{DynamicResource ComboBoxStyle1}" 
+                  x:Name="comboAllStatuses"
+                  ItemsSource="{Binding statuses}"
+                  Margin="5,0,0,0" 
+                  SelectionChanged="comboAllStatuses_SelectionChanged"
+                  IsEnabled="False">
+            <ComboBox.Resources>
+                <!-- color of ComboBoxItem -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" 
+                                 Color="#353e48" />
+            </ComboBox.Resources>
+        </ComboBox>
+
+
+        <!--Кнопка редактирования статуса-->
+        <Button Grid.Column="4"
+                Style="{StaticResource BtnDesktopIcons}"
+                Click="BtnEditStatus_Click"
+                Name="BtnEditStatus"
+                Panel.ZIndex="1"
+                IsEnabled="False">
+            <Image Source="/Assets/edit.png" Width="15"/>
+        </Button>
+
+        <!--Кнопка обновить данные-->
+        <Button Grid.Column="5"
+                Style="{StaticResource BtnDesktopIcons}"
+                Click="BtnRefresh_Click"
+                Panel.ZIndex="1">
+            <Image Source="/Assets/refresh.png" Width="15"/>
+        </Button>
+
+        <!--Кнопка вызова правой панели-->
+        <Button Grid.Column="6"
+                Style="{StaticResource BtnDesktopIcons}"
+                Click="BtnFilter_Click"
+                Name="BtnFilter"
+                IsEnabled="False"
+                Panel.ZIndex="1">
+            <Image Source="/Assets/filter.png" Width="15"/>
+        </Button>
+
+        <!--Всего заявок-->
+        <DockPanel Grid.Row="2"
+                   Grid.Column="0" 
+                   Grid.ColumnSpan="7">
+
+            <TextBlock Text=" Всего заявок: "
+                       Style="{StaticResource TextBlockStyle}" 
+                       Height="15" Width="auto"/>
+
+            <TextBlock x:Name="AllMessagesTextBlock"
+                       Text="{Binding AllMessagesTextBlock}"
+                       Style="{StaticResource TextBlockStyle}"
+                       Height="15"/>
+        </DockPanel>
+
+        <!--Заявок за период-->
+        <DockPanel Grid.Row="3"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="7">
+
+            <TextBlock Text=" За указанный период поступило заявок: "
+                       Foreground="Gray"
+                       VerticalAlignment="Center"
+                       Height="15"/>
+
+            <TextBlock Text="{Binding TextCountMessagesPeriod}"
+                       x:Name="TextCountMessagesPeriod"
+                       Foreground="Gray"
+                       Grid.Row="3"
+                       VerticalAlignment="Center" 
+                       Height="15"/>
+        </DockPanel>
+
+        <!--Данные сообщений-->
+        <DataGrid x:Name="dataGridMessages" 
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False"
+                  BorderThickness="0" 
+                  SelectionMode="Single"
+                  ItemsSource="{Binding messages}"
+                  Grid.Row="1" 
+                  Grid.ColumnSpan="7" 
+                  Background="#FFA5A5A5" 
+                  HorizontalGridLinesBrush="#FF414A54" 
+                  VerticalGridLinesBrush="#FF414A54">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="Id" 
+                                    Binding="{Binding id}" 
+                                    Header="Номер заявки" 
+                                    IsReadOnly="True"
+                                    Width="*"/>
+
+                <DataGridTextColumn x:Name="DateMessage" 
+                                    Binding="{Binding date}" 
+                                    Header="Время заявки"
+                                    IsReadOnly="True"
+                                    Width="*"/>
+
+                <DataGridTextColumn x:Name="Name" 
+                                    Binding="{Binding name}" 
+                                    Header="Имя"
+                                    IsReadOnly="True"
+                                    Width="*"/>
+
+                <DataGridTextColumn x:Name="TextMessage" 
+                                    Binding="{Binding text}" 
+                                    Header="Текст заявки"
+                                    IsReadOnly="True"
+                                    Width="*"/>
+
+                <DataGridTextColumn x:Name="Contacts" 
+                                    Binding="{Binding contact}" 
+                                    Header="Контакты"
+                                    IsReadOnly="True"
+                                    Width="*"/>
+
+                <DataGridTextColumn x:Name="Status" 
+                                    Binding="{Binding status}" 
+                                    Header="Статус"
+                                    IsReadOnly="True"
+                                    Width="*"/>
+            </DataGrid.Columns>
+
+        </DataGrid>
+        
+       <!--Скрытый текстблок. Хранит выделенную заявку-->
+        <TextBlock Visibility="Hidden"
+                   x:Name="HiddenSelectedMessage"
+                   Text="{Binding SelectedItem.id, ElementName=dataGridMessages}"/>
+
+        <!--Скрытая панель редактирования статуа заявки-->
+        <StackPanel Grid.Column="4"
+                    x:Name="StackPanelChangeStatus"
+                    Visibility="Collapsed"
+                    Panel.ZIndex="0">
+
+            <ComboBox x:Name="ComboBoxChangeStatus"
+                      Style="{DynamicResource ComboBoxStyle1}" 
+                      ItemsSource="{Binding statusesForEdit}"
+                      Width="120" 
+                      Height="40"
+                      SelectionChanged="ComboBoxChangeStatus_SelectionChanged">
+                <ComboBox.Resources>
+                    <!-- color of ComboBoxItem -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" 
+                                 Color="#353e48" />
+                    
+                </ComboBox.Resources>
+
+            </ComboBox>
+
+        </StackPanel>
+
+    </Grid>
+</Page>

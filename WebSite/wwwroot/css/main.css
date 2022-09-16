@@ -346,6 +346,11 @@ label{
     background-image: url(../img/header.jpg);
     background-size: cover;
 }
+
+.navbar-admin-custom {
+    padding: 80px 0 12px;
+}
+
 .navbar-custom nav{
     position: absolute;
     right: 0;
@@ -449,6 +454,11 @@ label{
     z-index: 999;
     padding: 10px 0 44px;
 }
+
+.navbar_admin_style {
+    padding: 10px 0 12px;
+}
+
 .navbar_style a.logo{
     width: 140px;
 }

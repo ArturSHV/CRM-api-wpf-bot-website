@@ -1,0 +1,170 @@
+﻿
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <!-- Стили кнопок верхнего меню -->
+    <Style TargetType="Button" x:Key="BtnDesktopIcons">
+        <Setter Property="Background" Value="#353e48"/>
+        <Setter Property="BorderBrush" Value="#FF414A54"/>
+        <Setter Property="BorderThickness" Value="1,0,0,0"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF414C59"/> <!--#71be00-->
+                <Setter Property="BorderBrush" Value="#71be00"/>
+                <Setter Property="BorderThickness" Value="0,0,0,3"/>
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
+
+
+    <!-- Стили кнопки сохранения в окне -->
+    <Style TargetType="Button" x:Key="SaveButton">
+        <Setter Property="Background" Value="#FF525E6D"/>
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF414C59"/>
+                <!--#71be00-->
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
+    
+
+    <!-- Стили кнопок действия-->
+    <Style TargetType="Button" x:Key="BtnFormStyle">
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="0,5,5,0" />
+            </Style>
+        </Style.Resources>
+        <Setter Property="Margin" Value="0,10,0,10"/>
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="#FF2E495A" />
+        <Setter Property="Padding" Value="15,0,15,0" />
+        <Setter Property="FontSize" Value="15"/>
+    </Style>
+
+
+    <!-- Стили текстблока действия-->
+    <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+
+    </Style>
+
+    
+    
+    <!-- Стили кнопок главного меню-->
+    <Style x:Key="BtnMainLeftMenuStyle" TargetType="Button">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Width" Value="195"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="20,0,0,0"/>
+        <Setter Property="BorderBrush" Value="#FF414A54"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF414C59"/>
+                <!--#71be00-->
+                <Setter Property="BorderBrush" Value="#71be00"/>
+                <Setter Property="BorderThickness" Value="3,0,0,0"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <!-- Стиль активной кнопки главного меню-->
+    <Style x:Key="BtnMainLeftMenuStyleActive" TargetType="Button">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#FF414C59"/>
+        <Setter Property="Width" Value="195"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="20,0,0,0"/>
+        <Setter Property="BorderBrush" Value="#71be00"/>
+        <Setter Property="BorderThickness" Value="3,0,0,0"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        
+    </Style>
+
+
+    <!-- Стили заголовок меню-->
+    <Style x:Key="MenuHeaderStyle" TargetType="Button">
+        <Setter Property="IsEnabled" Value="False"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#71be00"/>
+        <Setter Property="Width" Value="195"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Padding" Value="20,0,0,0"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="#FF414A54" BorderThickness="0,0,0,1">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        
+    </Style>
+
+
+    <Style x:Key="test" TargetType="ComboBox">
+        <Style.Resources>
+            <Style TargetType="ComboBoxItem">
+                <Setter Property="Background" Value="#FF414A54" />
+            </Style>
+        </Style.Resources>
+
+    </Style>
+    
+</ResourceDictionary>

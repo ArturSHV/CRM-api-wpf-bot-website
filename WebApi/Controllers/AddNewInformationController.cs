@@ -89,29 +89,39 @@ namespace WebApi.Controllers
             
             string directoryPath = Path.Combine(_appEnvironment.ContentRootPath, "wwwroot/img"); 
 
-            var indexOfExtension = uploadedFile.LastIndexOf('.');
-
-            string extension = uploadedFile[(indexOfExtension + 1)..];
-
-            if ((extension == "png") || (extension == "jpg") || (extension == "jpeg"))
-
+            try
             {
-                string newNameImage = HashPasswordHelper.RandomString(30) + "." + extension;
+                var indexOfExtension = uploadedFile.LastIndexOf('.');
 
-                string filePath = Path.Combine(directoryPath, newNameImage);
+                string extension = uploadedFile[(indexOfExtension + 1)..];
 
-                await Task.Run(()=> {
-                    WebClient webClient = new WebClient();
-                    webClient.DownloadFile(uploadedFile, filePath);
-                });  
+                if ((extension == "png") || (extension == "jpg") || (extension == "jpeg"))
 
-                directoryPath = NewPath(filePath);
+                {
+                    string newNameImage = HashPasswordHelper.RandomString(30) + "." + extension;
 
-                return directoryPath;
+                    string filePath = Path.Combine(directoryPath, newNameImage);
+
+                    await Task.Run(() => {
+                        WebClient webClient = new WebClient();
+                        webClient.DownloadFile(uploadedFile, filePath);
+                    });
+
+                    directoryPath = NewPath(filePath);
+
+                    return directoryPath;
+                }
+
+                else
+                    return "";
             }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            
 
-            else
-                return "";
+            
         }
 
 
@@ -385,7 +395,7 @@ namespace WebApi.Controllers
 
                     await context.SaveChangesAsync();
 
-                    return Ok("Услуга успешно отредактирована");
+                    return Ok("Услуга успешно удалена");
                 }
                 else
                     return BadRequest($"Услуга с id={service.Id} не существует");

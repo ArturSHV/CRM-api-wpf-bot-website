@@ -8,6 +8,5 @@ namespace WebApi.Models
         public string Placeholder { get; set; }
         public string Title { get; set; }
         public string ButtonText { get; set; }
-
     }
 }

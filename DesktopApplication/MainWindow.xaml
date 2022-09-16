@@ -4,21 +4,70 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        WindowState="Maximized"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid Background="#d3d3d3">
+        Title="Программа администрирования сайта"
+        x:Name="Desktop"
+        Height="650"
+        MinHeight="650"
+        Width="1150"
+        MinWidth="1150"
+        AllowsTransparency="False"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent">
+
+
+    <Grid x:Name="grid" Background="#FFA5A5A5">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="195"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="130"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Row="0" Grid.Column="0">
-            <Image Source="/img/header.jpg" Stretch="UniformToFill"/>
-        </DockPanel>
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0" 
+                    Background="#353e48"/>
 
-        <DockPanel Grid.Row="0" Grid.Column="0">
-            
-        </DockPanel>
+
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0" 
+                    VerticalAlignment="Top">
+
+            <Button Content="Меню" 
+                    Style="{DynamicResource MenuHeaderStyle}"/>
+
+            <Button Content="Рабочий стол" 
+                    Style="{DynamicResource BtnMainLeftMenuStyle}"
+                    Click="DesktopBtn_Click"
+                    Name="DesktopBtn"/>
+
+            <Button Content="Услуги" 
+                    Style="{DynamicResource BtnMainLeftMenuStyle}"
+                    Click="Services_Click"/>
+
+            <Button Content="Проекты" 
+                    Style="{DynamicResource BtnMainLeftMenuStyle}"
+                    Click="Projects_click"/>
+
+            <Button Content="Блоги"  
+                    Style="{DynamicResource BtnMainLeftMenuStyle}"
+                    Click="Blogs_Click"/>
+
+            <Button Content="Контакты" 
+                    Style="{DynamicResource BtnMainLeftMenuStyle}"
+                    Click="Contacts_Click"/>
+
+        </StackPanel>
+
+
+        <Frame Grid.Column="1"
+               Name="MainFrame"
+               NavigationUIVisibility="Hidden"/>
+
 
     </Grid>
+
 </Window>

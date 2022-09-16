@@ -59,9 +59,11 @@ jQuery(function($) {
         if ($(window).scrollTop() > 50) {
             // > 100px from top - show div
             $(".navbar-custom").addClass("navbar_style");
+            $(".navbar-admin-custom").addClass("navbar_admin_style");
         } else {
             // <= 100px from top - hide div
             $(".navbar-custom").removeClass("navbar_style");
+            $(".navbar-admin-custom").removeClass("navbar_admin_style");
         }
     });
 
