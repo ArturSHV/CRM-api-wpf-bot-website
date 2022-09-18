@@ -1,4 +1,5 @@
-﻿using DesktopApplication.View;
+﻿using DesktopApplication.Models;
+using DesktopApplication.View;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -16,13 +17,10 @@ namespace DesktopApplication
         BlogsPage blogs = new BlogsPage();
         ContactsPage contacts;
         Button LastBtnName = new Button();
-        
-
 
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
 
@@ -51,6 +49,7 @@ namespace DesktopApplication
         {
             MainFrame.Content = desktop;
             ChangeStyleBtn(sender);
+            
 
         }
 

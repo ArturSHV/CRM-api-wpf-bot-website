@@ -3,10 +3,13 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:DesktopApplication.View"
-      mc:Ignorable="d" 
+      xmlns:model="clr-namespace:DesktopApplication.Models"
+      mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ProjectsPage">
+      Title="Блоги">
+    <!--<Page.DataContext>
+        <model:BlogsPageModel/>
+    </Page.DataContext>-->
 
     <Grid Name="grid">
         <Grid.Background>
@@ -67,7 +70,7 @@
 
 
         <!--Данные блогов-->
-        <DataGrid x:Name="dataGridBlogs" 
+        <DataGrid x:Name="dataGridBlogs"
                   AutoGenerateColumns="False" 
                   CanUserAddRows="False"
                   ItemsSource="{Binding model}"

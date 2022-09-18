@@ -14,12 +14,12 @@ namespace DesktopApplication.View
     {
         Controller<ServicesModel> servicesController = new Controller<ServicesModel>();
         AddNewServiceWindow serviceWindow;
-        ServicesPageModel servicesPageModel;
+        ServicesPageModel servicesPageModel = new ServicesPageModel();
 
         public ServicesPage()
         {
             InitializeComponent();
-            servicesPageModel = new ServicesPageModel() { model = servicesController.GetModel() };
+            DataContext = servicesPageModel;
         }
 
 
@@ -47,17 +47,13 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnAddService_Click(object sender, RoutedEventArgs e)
+        private void BtnAddService_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    serviceWindow = new AddNewServiceWindow();
+            serviceWindow = new AddNewServiceWindow();
 
-                    serviceWindow.ShowDialog();
-                });
-            });
+            serviceWindow.ShowDialog();
+
+            servicesPageModel.PageModelCreator();
         }
 
 
@@ -66,15 +62,9 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnRefreshService_Click(object sender, RoutedEventArgs e)
+        private void BtnRefreshService_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    DataContext = servicesPageModel;
-                });
-            });
+            servicesPageModel.PageModelCreator();
         }
 
         /// <summary>
@@ -82,26 +72,20 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnDeleteService_Click(object sender, RoutedEventArgs e)
+        private void BtnDeleteService_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
+            if (dataGridServices.SelectedIndex >= 0)
             {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    if (dataGridServices.SelectedIndex >= 0)
-                    {
-                        ServicesModel selectedService = dataGridServices.SelectedItem as ServicesModel;
+                ServicesModel selectedService = dataGridServices.SelectedItem as ServicesModel;
 
-                        var result = servicesController.DeleteData(selectedService);
+                var result = servicesController.DeleteData(selectedService);
 
-                        MessageBox.Show(result);
+                servicesPageModel.PageModelCreator();
 
-                        DataContext = servicesPageModel;
-                    }
-                    else
-                        MessageBox.Show("Выберите услугу");
-                });
-            });
+                MessageBox.Show(result);
+            }
+            else
+                MessageBox.Show("Выберите услугу");
 
         }
     }

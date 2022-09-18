@@ -16,12 +16,12 @@ namespace DesktopApplication.View
         AddNewBlogWindow blogWindow;
         EditBlogWindow editBlogWindow;
 
-        BlogsPageModel blogsPageModel;
+        BlogsPageModel blogsPageModel = new BlogsPageModel();
 
         public BlogsPage()
         {
             InitializeComponent();
-            blogsPageModel = new BlogsPageModel() { model = blogsController.GetModel() };
+            DataContext = blogsPageModel;
         }
 
 
@@ -30,16 +30,12 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnAddBlog_Click(object sender, RoutedEventArgs e)
+        private void BtnAddBlog_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    blogWindow = new AddNewBlogWindow();
-                    blogWindow.ShowDialog();
-                });
-            });
+            blogWindow = new AddNewBlogWindow();
+            blogWindow.ShowDialog();
+
+            blogsPageModel.PageModelCreator();
         }
 
 
@@ -48,15 +44,9 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnRefreshBlog_Click(object sender, RoutedEventArgs e)
+        private void BtnRefreshBlog_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    DataContext = blogsPageModel;
-                });
-            });
+            blogsPageModel.PageModelCreator();
         }
 
 
@@ -65,26 +55,20 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnDeleteBlog_Click(object sender, RoutedEventArgs e)
+        private void BtnDeleteBlog_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
+            if (dataGridBlogs.SelectedIndex >= 0)
             {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    if (dataGridBlogs.SelectedIndex >= 0)
-                    {
-                        BlogsModel blogsModel = dataGridBlogs.SelectedItem as BlogsModel;
+                BlogsModel blogsModel = dataGridBlogs.SelectedItem as BlogsModel;
 
-                        var result = blogsController.DeleteData(blogsModel);
+                var result = blogsController.DeleteData(blogsModel);
 
-                        MessageBox.Show(result);
+                blogsPageModel.PageModelCreator();
 
-                        DataContext = blogsPageModel;
-                    }
-                    else
-                        MessageBox.Show("Выберите блог");
-                });
-            });
+                MessageBox.Show(result);
+            }
+            else
+                MessageBox.Show("Выберите блог");
 
         }
 
@@ -93,24 +77,16 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnEditBlog_Click(object sender, RoutedEventArgs e)
+        private void BtnEditBlog_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
+            if (dataGridBlogs.SelectedIndex >= 0)
             {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    if (dataGridBlogs.SelectedIndex >= 0)
-                    {
-                        editBlogWindow = new EditBlogWindow(dataGridBlogs);
+                editBlogWindow = new EditBlogWindow(dataGridBlogs);
 
-                        editBlogWindow.ShowDialog();
-                    }
-                    else
-                        MessageBox.Show("Выберите блог");
-                    
-                });
-            });
-            
+                editBlogWindow.ShowDialog();
+            }
+            else
+                MessageBox.Show("Выберите блог");
         }
     }
 }

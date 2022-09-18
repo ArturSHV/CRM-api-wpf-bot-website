@@ -16,12 +16,12 @@ namespace DesktopApplication.View
         AddNewProjectWindow projectWindow;
         EditProjectWindow editProjectWindow;
 
-        ProjectsPageModel projectsPageModel;
+        ProjectsPageModel projectsPageModel = new ProjectsPageModel();
 
         public ProjectsPage()
         {
             InitializeComponent();
-            projectsPageModel = new ProjectsPageModel() { model = projectsController.GetModel() };
+            DataContext = projectsPageModel;
         }
 
 
@@ -30,16 +30,11 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnAddProject_Click(object sender, RoutedEventArgs e)
+        private void BtnAddProject_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    projectWindow = new AddNewProjectWindow();
-                    projectWindow.ShowDialog();
-                });
-            });
+            projectWindow = new AddNewProjectWindow();
+            projectWindow.ShowDialog();
+            projectsPageModel.PageModelCreator();
         }
 
 
@@ -48,15 +43,9 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnRefreshProject_Click(object sender, RoutedEventArgs e)
+        private void BtnRefreshProject_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    DataContext = projectsPageModel;
-                });
-            });
+            projectsPageModel.PageModelCreator();
         }
 
 
@@ -65,27 +54,20 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnDeleteProject_Click(object sender, RoutedEventArgs e)
+        private void BtnDeleteProject_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
+            if (dataGridProjects.SelectedIndex >= 0)
             {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    if (dataGridProjects.SelectedIndex >= 0)
-                    {
-                        ProjectsModel projectsModel = dataGridProjects.SelectedItem as ProjectsModel;
+                ProjectsModel projectsModel = dataGridProjects.SelectedItem as ProjectsModel;
 
-                        var result = projectsController.DeleteData(projectsModel);
+                var result = projectsController.DeleteData(projectsModel);
 
-                        MessageBox.Show(result);
+                projectsPageModel.PageModelCreator();
 
-                        DataContext = projectsPageModel;
-                    }
-                    else
-                        MessageBox.Show("Выберите проект");
-                });
-            });
-
+                MessageBox.Show(result);
+            }
+            else
+                MessageBox.Show("Выберите проект");
         }
 
         /// <summary>
@@ -93,24 +75,19 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnEditProject_Click(object sender, RoutedEventArgs e)
+        private void BtnEditProject_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
+            if (dataGridProjects.SelectedIndex >= 0)
             {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    if (dataGridProjects.SelectedIndex >= 0)
-                    {
-                        editProjectWindow = new EditProjectWindow(dataGridProjects);
+                editProjectWindow = new EditProjectWindow(dataGridProjects);
 
-                        editProjectWindow.ShowDialog();
-                    }
-                    else
-                        MessageBox.Show("Выберите проект");
-                    
-                });
-            });
-            
+                editProjectWindow.ShowDialog();
+
+                projectsPageModel.PageModelCreator();
+            }
+            else
+                MessageBox.Show("Выберите проект");
+
         }
     }
 }

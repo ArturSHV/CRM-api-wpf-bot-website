@@ -3,11 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:DesktopApplication.View"
+      xmlns:model="clr-namespace:DesktopApplication.Models"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Desktop"
-    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+      xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <!--Стили комбобокса-->
     <Page.Resources>
@@ -222,7 +222,7 @@
                        Style="{StaticResource TextBlockStyle}" 
                        Height="15" Width="auto"/>
 
-            <TextBlock x:Name="AllMessagesTextBlock"
+            <TextBlock x:Name="allMessagesTextBlock"
                        Text="{Binding AllMessagesTextBlock}"
                        Style="{StaticResource TextBlockStyle}"
                        Height="15"/>
@@ -247,7 +247,7 @@
         </DockPanel>
 
         <!--Данные сообщений-->
-        <DataGrid x:Name="dataGridMessages" 
+        <DataGrid x:Name="dataGridMessages"
                   AutoGenerateColumns="False" 
                   CanUserAddRows="False"
                   BorderThickness="0" 

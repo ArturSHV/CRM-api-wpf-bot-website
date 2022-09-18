@@ -2,6 +2,7 @@
 
 namespace DesktopApplication.Models
 {
+
     public class MessagesModel
     {
         public int id { get; set; }
@@ -13,6 +14,9 @@ namespace DesktopApplication.Models
 
 
         public string urlGetMessages { get => "https://localhost:44369/api/GetMessages"; }
-        public string urlEditMessage { get => "https://localhost:44369/api/EditStatus"; } 
+        public string urlEditMessage { get => "https://localhost:44369/api/EditStatus"; }
+
+
+        
     }
 }

@@ -16,6 +16,7 @@ namespace DesktopApplication.View
         bool rightMenuIsOpen = false;
         Button LastBtnName = new Button();
 
+
         public DesktopPage()
         {
             InitializeComponent();
@@ -45,18 +46,10 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnTodayClick(object sender, RoutedEventArgs e)
+        private void BtnTodayClick(object sender, RoutedEventArgs e)
         {
             ChangeStyleBtn(sender);
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    DataContext = desktopController.TodayData();
-                });
-
-            });
-
+            DataContext = desktopController.TodayData();
         }
 
         /// <summary>
@@ -64,17 +57,10 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnYesterdayClick(object sender, RoutedEventArgs e)
+        private void BtnYesterdayClick(object sender, RoutedEventArgs e)
         {
             ChangeStyleBtn(sender);
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    DataContext = desktopController.YesterdayData();
-                });
-
-            });
+            DataContext = desktopController.YesterdayData();
 
         }
 
@@ -83,17 +69,10 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnWeekClick(object sender, RoutedEventArgs e)
+        private void BtnWeekClick(object sender, RoutedEventArgs e)
         {
             ChangeStyleBtn(sender);
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    DataContext = desktopController.WeekData();
-                });
-
-            });
+            DataContext = desktopController.WeekData();
 
         }
 
@@ -103,17 +82,10 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnMonthClick(object sender, RoutedEventArgs e)
+        private void BtnMonthClick(object sender, RoutedEventArgs e)
         {
             ChangeStyleBtn(sender);
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    DataContext = desktopController.MonthData();
-                });
-
-            });
+            DataContext = desktopController.MonthData();
 
         }
 
@@ -122,27 +94,19 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    DataContext = desktopController.FirstData();
+            DataContext = desktopController.FirstData();
 
-                    BtnEditStatus.IsEnabled = true;
+            BtnEditStatus.IsEnabled = true;
 
-                    comboAllStatuses.IsEnabled = true;
+            comboAllStatuses.IsEnabled = true;
 
-                    BtnFilter.IsEnabled = true;
+            BtnFilter.IsEnabled = true;
 
-                });
-
-            });
-
-           
         }
+
+
 
 
         /// <summary>
@@ -152,28 +116,20 @@ namespace DesktopApplication.View
         /// <param name="e"></param>
         private async void comboAllStatuses_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await Task.Run(() =>
+            var status = comboAllStatuses.Text;
+
+            if (!string.IsNullOrEmpty(status))
             {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                if (status != "Все")
                 {
-                    var status = comboAllStatuses.Text;
+                    DataContext = desktopController.SortedDataByStatus(status);
+                }
+                else
+                {
+                    DataContext = desktopController.FirstData();
+                }
 
-                    if (!string.IsNullOrEmpty(status))
-                    {
-                        if (status != "Все")
-                        {
-                            DataContext = desktopController.SortedDataByStatus(status);
-                        }
-                        else
-                        {
-                            DataContext = desktopController.FirstData();
-                        }
-
-                    }
-                    
-                });
-
-            });
+            }
         }
 
 
@@ -220,30 +176,22 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void ComboBoxChangeStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBoxChangeStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await Task.Run(() =>
+            if (!string.IsNullOrEmpty(HiddenSelectedMessage.Text))
             {
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    if (!string.IsNullOrEmpty(HiddenSelectedMessage.Text))
-                    { 
-                        var id = Convert.ToInt32(HiddenSelectedMessage.Text);
+                var id = Convert.ToInt32(HiddenSelectedMessage.Text);
 
-                        string status = ComboBoxChangeStatus.SelectedItem as string;
+                string status = ComboBoxChangeStatus.SelectedItem as string;
 
-                        MessagesModel messagesModel = new MessagesModel() { id = id, status = status };
+                MessagesModel messagesModel = new MessagesModel() { id = id, status = status };
 
-                        desktopController.EditStatus(messagesModel);
+                desktopController.EditStatus(messagesModel);
 
-                        DataContext = desktopController.FirstData();
+                DataContext = desktopController.FirstData();
 
-                    }
+            }
 
-                });
-
-            });
-            
         }
 
         /// <summary>
@@ -251,30 +199,23 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnPeriodClick(object sender, RoutedEventArgs e)
+        private void BtnPeriodClick(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                DateTime date1;
+            DateTime date1;
 
-                DateTime date2;
+            DateTime date2;
 
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    if (datePicker1.Text != "")
-                        date1 = Convert.ToDateTime(datePicker1.Text);
-                    else
-                        date1 = DateTime.MinValue;
+            if (datePicker1.Text != "")
+                date1 = Convert.ToDateTime(datePicker1.Text);
+            else
+                date1 = DateTime.MinValue;
 
-                    if (datePicker2.Text != "")
-                        date2 = Convert.ToDateTime(datePicker2.Text);
-                    else
-                        date2 = DateTime.Now;
+            if (datePicker2.Text != "")
+                date2 = Convert.ToDateTime(datePicker2.Text);
+            else
+                date2 = DateTime.Now;
 
-                    DataContext = desktopController.PeriodData(date1, date2);
-                });
-
-            });
+            DataContext = desktopController.PeriodData(date1, date2);
         }
     }
 }

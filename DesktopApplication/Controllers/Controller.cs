@@ -1,6 +1,7 @@
 ﻿using DesktopApplication.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PropertyChanged;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using static ClassLibrary.GetApiData;
@@ -20,7 +21,7 @@ namespace DesktopApplication.Controllers
         /// </summary>
         public ObservableCollection<Model> GetModel()
         {
-            model.Clear();
+            //model.Clear();
 
             object a = PostData(classModel.UrlGet);
 
@@ -39,7 +40,6 @@ namespace DesktopApplication.Controllers
             }
             return model;
         }
-
 
 
         /// <summary>
