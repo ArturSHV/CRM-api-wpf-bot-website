@@ -47,6 +47,7 @@ namespace DesktopApplication.View
         private void BtnRefreshBlog_Click(object sender, RoutedEventArgs e)
         {
             blogsPageModel.PageModelCreator();
+           
         }
 
 

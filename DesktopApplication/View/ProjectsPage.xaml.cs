@@ -21,7 +21,7 @@ namespace DesktopApplication.View
         public ProjectsPage()
         {
             InitializeComponent();
-            DataContext = projectsPageModel;
+            DataContext = projectsController;
         }
 
 
@@ -45,7 +45,7 @@ namespace DesktopApplication.View
         /// <param name="e"></param>
         private void BtnRefreshProject_Click(object sender, RoutedEventArgs e)
         {
-            projectsPageModel.PageModelCreator();
+            var a = projectsController.GetModel();
         }
 
 
@@ -82,8 +82,6 @@ namespace DesktopApplication.View
                 editProjectWindow = new EditProjectWindow(dataGridProjects);
 
                 editProjectWindow.ShowDialog();
-
-                projectsPageModel.PageModelCreator();
             }
             else
                 MessageBox.Show("Выберите проект");

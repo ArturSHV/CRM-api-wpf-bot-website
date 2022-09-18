@@ -65,6 +65,7 @@
             <Image Source="/Assets/delete.png" Width="15"/>
         </Button>
 
+        
 
         <!--Данные проектов-->
         <DataGrid x:Name="dataGridProjects" 

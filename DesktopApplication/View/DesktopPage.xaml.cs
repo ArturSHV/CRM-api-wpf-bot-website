@@ -20,7 +20,7 @@ namespace DesktopApplication.View
         public DesktopPage()
         {
             InitializeComponent();
-
+            DataContext = desktopController;
         }
 
 
@@ -49,7 +49,7 @@ namespace DesktopApplication.View
         private void BtnTodayClick(object sender, RoutedEventArgs e)
         {
             ChangeStyleBtn(sender);
-            DataContext = desktopController.TodayData();
+            desktopController.TodayData();
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace DesktopApplication.View
         private void BtnYesterdayClick(object sender, RoutedEventArgs e)
         {
             ChangeStyleBtn(sender);
-            DataContext = desktopController.YesterdayData();
+            desktopController.YesterdayData();
 
         }
 
@@ -72,7 +72,7 @@ namespace DesktopApplication.View
         private void BtnWeekClick(object sender, RoutedEventArgs e)
         {
             ChangeStyleBtn(sender);
-            DataContext = desktopController.WeekData();
+            desktopController.WeekData();
 
         }
 
@@ -85,7 +85,7 @@ namespace DesktopApplication.View
         private void BtnMonthClick(object sender, RoutedEventArgs e)
         {
             ChangeStyleBtn(sender);
-            DataContext = desktopController.MonthData();
+            desktopController.MonthData();
 
         }
 
@@ -96,7 +96,8 @@ namespace DesktopApplication.View
         /// <param name="e"></param>
         private void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            DataContext = desktopController.FirstData();
+
+            desktopController.FirstData();
 
             BtnEditStatus.IsEnabled = true;
 
@@ -114,20 +115,13 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void comboAllStatuses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void comboAllStatuses_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var status = comboAllStatuses.Text;
+            var status = comboAllStatuses.SelectedItem as StatusesModel;
 
-            if (!string.IsNullOrEmpty(status))
+            if (status!=null)
             {
-                if (status != "Все")
-                {
-                    DataContext = desktopController.SortedDataByStatus(status);
-                }
-                else
-                {
-                    DataContext = desktopController.FirstData();
-                }
+                desktopController.SortedDataByStatus(status);
 
             }
         }
@@ -182,14 +176,11 @@ namespace DesktopApplication.View
             {
                 var id = Convert.ToInt32(HiddenSelectedMessage.Text);
 
-                string status = ComboBoxChangeStatus.SelectedItem as string;
+                var status = ComboBoxChangeStatus.SelectedItem as StatusesModel;
 
-                MessagesModel messagesModel = new MessagesModel() { id = id, status = status };
+                MessagesModel messagesModel = new MessagesModel() { id = id, status = status.Name };
 
                 desktopController.EditStatus(messagesModel);
-
-                DataContext = desktopController.FirstData();
-
             }
 
         }
@@ -215,7 +206,7 @@ namespace DesktopApplication.View
             else
                 date2 = DateTime.Now;
 
-            DataContext = desktopController.PeriodData(date1, date2);
+            desktopController.PeriodData(date1, date2);
         }
     }
 }

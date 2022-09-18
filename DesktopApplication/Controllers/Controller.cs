@@ -8,10 +8,12 @@ using static ClassLibrary.GetApiData;
 
 namespace DesktopApplication.Controllers
 {
+    [AddINotifyPropertyChangedInterface]
     public class Controller<Model> 
         where Model : IModel, new()
     {
-        public ObservableCollection<Model> model = new ObservableCollection<Model>();
+        public ObservableCollection<Model> forModel { get; set; }
+        public IEnumerable<Model> model { get; set; }
 
         IModel classModel = new Model();
 
@@ -21,8 +23,6 @@ namespace DesktopApplication.Controllers
         /// </summary>
         public ObservableCollection<Model> GetModel()
         {
-            //model.Clear();
-
             object a = PostData(classModel.UrlGet);
 
             if (a != null)
@@ -34,11 +34,11 @@ namespace DesktopApplication.Controllers
                     oldString = oldString.Insert(oldString.Length, "]");
                 }
 
-                //string c = JArray.FromObject(oldString).ToString();
-                model = JsonConvert.DeserializeObject<ObservableCollection<Model>>(oldString);
+                forModel = JsonConvert.DeserializeObject<ObservableCollection<Model>>(oldString);
 
+                model = forModel;
             }
-            return model;
+            return forModel;
         }
 
 

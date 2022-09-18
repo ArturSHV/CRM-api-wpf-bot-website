@@ -102,7 +102,6 @@
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\DesktopController.cs" />
     <Compile Include="Lib\GetApiData.cs" />
-    <Compile Include="Models\DesktopPageModel.cs" />
     <Compile Include="Models\MessagesModel.cs" />
     <Compile Include="Models\ProjectsModel.cs" />
     <Compile Include="Models\ProjectsPageModel.cs" />
@@ -242,6 +241,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\1488.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.6.3\build\Fody.targets" Condition="Exists('..\packages\Fody.6.6.3\build\Fody.targets')" />

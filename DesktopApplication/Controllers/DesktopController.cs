@@ -6,10 +6,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using static ClassLibrary.GetApiData;
+using PropertyChanged;
+using System.Collections;
+using System.Threading.Tasks;
 
 
 namespace DesktopApplication.Controllers
 {
+
+    [AddINotifyPropertyChangedInterface]
     public class DesktopController
     {
         StatusesModel statusesModel = new StatusesModel();
@@ -18,37 +23,31 @@ namespace DesktopApplication.Controllers
 
 
         /// <summary>
-        /// Модель для рабочего стола
-        /// </summary>
-        public DesktopPageModel desktopPageModel { get; set; }
-
-        /// <summary>
         /// Заявки
         /// </summary>
-        private ObservableCollection<MessagesModel> messages = new ObservableCollection<MessagesModel>();
+        public IEnumerable<MessagesModel> messages { get; set; } 
+
+
+        public ObservableCollection<MessagesModel> forMessages { get; set; }
 
         /// <summary>
         /// Статусы
         /// </summary>
-        private ObservableCollection<string> statuses = new ObservableCollection<string>();
+        public ObservableCollection<StatusesModel> statuses { get; set; }
 
-        /// <summary>
-        /// Статусы для редактирования. Без "Все"
-        /// </summary>
-        private ObservableCollection<string> statusesForEdit = new ObservableCollection<string>();
 
         /// <summary>
         /// Заявок за период
         /// </summary>
-        private int TextCountMessagesPeriod { get; set; }
+        public int TextCountMessagesPeriod { get; set; }
 
         /// <summary>
         /// Всего заявок
         /// </summary>
-        private int AllMessagesTextBlock {
+        public int AllMessagesTextBlock {
             get{ 
                 if (messages != null) 
-                    return messages.Count; 
+                    return forMessages.Count; 
                 else 
                     return 0; 
              }}
@@ -58,110 +57,123 @@ namespace DesktopApplication.Controllers
         /// Начальные данные
         /// </summary>
         /// <returns></returns>
-        public DesktopPageModel FirstData()
+        public async void FirstData()
         {
-            GetStatuses();
+            await Task.Run(() =>
+            {
+                GetStatuses();
 
-            GetMessages();
+                GetMessages();
 
-            TextCountMessagesPeriod = messages.Count();
-
-            return DesktopPageModelCreate(messages);
+                TextCountMessagesPeriod = messages.Count();
+            });
+            
+            
         }
 
         /// <summary>
         /// Заявки сегодня
         /// </summary>
         /// <returns></returns>
-        public DesktopPageModel TodayData()
+        public async void TodayData()
         {
-            GetStatuses();
+            await Task.Run(() =>
+            {
+                GetStatuses();
 
-            GetMessages();
+                GetMessages();
 
-            var date = DateTime.Today;
+                var date = DateTime.Today;
 
-            var a = messages.Where(x => x.date.ToShortDateString() == date.ToShortDateString());
+                messages = forMessages.Where(x => x.date.ToShortDateString() == date.ToShortDateString());
 
-            TextCountMessagesPeriod = a.Count();
-
-            return DesktopPageModelCreate(a);
+                TextCountMessagesPeriod = messages.Count();
+            });
+            
         }
 
         /// <summary>
         /// Заявки вчера
         /// </summary>
         /// <returns></returns>
-        public DesktopPageModel YesterdayData()
+        public async void YesterdayData()
         {
-            GetStatuses();
+            await Task.Run(() =>
+            {
+                GetStatuses();
 
-            GetMessages();
+                GetMessages();
 
-            var date = DateTime.Today.AddDays(-1);
+                var date = DateTime.Today.AddDays(-1);
 
-            var a = messages.Where(x => x.date.ToShortDateString() == date.ToShortDateString());
+                messages = forMessages.Where(x => x.date.ToShortDateString() == date.ToShortDateString());
 
-            TextCountMessagesPeriod = a.Count();
-
-            return DesktopPageModelCreate(a);
+                TextCountMessagesPeriod = messages.Count();
+            });
+            
         }
 
         /// <summary>
         /// Заявки неделя
         /// </summary>
         /// <returns></returns>
-        public DesktopPageModel WeekData()
+        public async void WeekData()
         {
-            GetStatuses();
+            await Task.Run(() =>
+            {
+                GetStatuses();
 
-            GetMessages();
+                GetMessages();
 
-            var date = DateTime.Today.AddDays(-7);
+                var date = DateTime.Today.AddDays(-7);
 
-            var a = messages.Where(x => x.date >= date);
+                messages = forMessages.Where(x => x.date >= date);
 
-            TextCountMessagesPeriod = a.Count();
-
-            return DesktopPageModelCreate(a);
+                TextCountMessagesPeriod = messages.Count();
+            });
+            
         }
 
         /// <summary>
         /// Заявки месяц
         /// </summary>
         /// <returns></returns>
-        public DesktopPageModel MonthData()
+        public async void MonthData()
         {
-            GetStatuses();
+            await Task.Run(() =>
+            {
+                GetStatuses();
 
-            GetMessages();
+                GetMessages();
 
-            var date = DateTime.Today.AddMonths(-1);
+                var date = DateTime.Today.AddMonths(-1);
 
-            var a = messages.Where(x => x.date >= date);
+                messages = forMessages.Where(x => x.date >= date);
 
-            TextCountMessagesPeriod = a.Count();
-
-            return DesktopPageModelCreate(a);
+                TextCountMessagesPeriod = messages.Count();
+            });
+            
         }
 
         /// <summary>
         /// Заявки период
         /// </summary>
         /// <returns></returns>
-        public DesktopPageModel PeriodData(DateTime date1, DateTime date2)
+        public async void PeriodData(DateTime date1, DateTime date2)
         {
-            GetStatuses();
+            await Task.Run(() =>
+            {
+                GetStatuses();
 
-            GetMessages();
+                GetMessages();
 
-            var date = DateTime.Today.AddMonths(-1);
+                var date = DateTime.Today.AddMonths(-1);
 
-            var a = messages.Where(x => (x.date >= date1) && (x.date <= date2));
+                messages = forMessages.Where(x => (x.date >= date1) && (x.date <= date2));
 
-            TextCountMessagesPeriod = a.Count();
+                TextCountMessagesPeriod = messages.Count();
+            });
             
-            return DesktopPageModelCreate(a);
         }
 
 
@@ -169,36 +181,19 @@ namespace DesktopApplication.Controllers
         /// Заявки отсортированные по статусу
         /// </summary>
         /// <returns></returns>
-        public DesktopPageModel SortedDataByStatus(string status)
+        public async void SortedDataByStatus(StatusesModel status)
         {
-            GetStatuses();
-
-            GetMessages();
-
-            var a = messages.Where(x => x.status == status);
-
-            TextCountMessagesPeriod = a.Count();
-
-            return DesktopPageModelCreate(a);
-        }
-
-
-        /// <summary>
-        /// Создание модели рабочего стола
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        private DesktopPageModel DesktopPageModelCreate(IEnumerable<MessagesModel> a)
-        {
-            desktopPageModel = new DesktopPageModel()
+            await Task.Run(() =>
             {
-                messages = a,
-                statuses = statuses,
-                statusesForEdit = statusesForEdit,
-                AllMessagesTextBlock = AllMessagesTextBlock,
-                TextCountMessagesPeriod = TextCountMessagesPeriod
-            };
-            return desktopPageModel;
+                GetStatuses();
+
+                GetMessages();
+
+                messages = forMessages.Where(x => x.status == status.Name);
+
+                TextCountMessagesPeriod = messages.Count();
+            });
+            
         }
 
 
@@ -207,43 +202,32 @@ namespace DesktopApplication.Controllers
         /// </summary>
         private void GetStatuses()
         {
-            statuses.Clear();
-
-            statusesForEdit.Clear();
-
             object status = PostData(statusesModel.urlGetStatuses);
 
             if (status != null)
             {
                 string s = JArray.FromObject(status).ToString();
 
-                var statusesCollection = JsonConvert.DeserializeObject<ObservableCollection<StatusesModel>>(s);
+                statuses = JsonConvert.DeserializeObject<ObservableCollection<StatusesModel>>(s);
 
-                statuses.Add("Все");
-                foreach (var item in statusesCollection)
-                {
-                    statuses.Add(item.Name);
-                    statusesForEdit.Add(item.Name);
-                }
             }
+
         }
 
         /// <summary>
         /// Все заявки
         /// </summary>
-        private void GetMessages()
+        public void GetMessages()
         {
-            messages.Clear();
-
             object a = PostData(messagesModel.urlGetMessages);
             if (a != null)
             {
                 string c = JArray.FromObject(a).ToString();
-                
-                messages = JsonConvert.DeserializeObject<ObservableCollection<MessagesModel>>(c);
-            }
 
-            
+                forMessages = JsonConvert.DeserializeObject<ObservableCollection<MessagesModel>>(c);
+
+                messages = forMessages;
+            }
         }
 
 
@@ -259,7 +243,5 @@ namespace DesktopApplication.Controllers
 
             return request;
         }
-
-
     }
 }
