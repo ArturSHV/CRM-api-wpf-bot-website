@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopApplication.View"
-        mc:Ignorable="d"
+      xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"  
+      mc:Ignorable="d"
         d:DesignHeight="450" 
         d:DesignWidth="800"
         Title="Отредактировать контакты">
@@ -27,6 +28,16 @@
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
+
+        <Image Grid.Column="0"
+               Grid.ColumnSpan="3"
+               Grid.Row="1" 
+               Panel.ZIndex="10" 
+               Width="30"
+               Height="30"
+               Name="Preloader"
+               Visibility="Collapsed"
+               gif:AnimationBehavior.SourceUri="/Resources/preloader.gif"/>
 
         <!--Кнопка обновления списка проектов-->
         <Button Grid.Column="2"

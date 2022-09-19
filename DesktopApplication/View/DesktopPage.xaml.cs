@@ -94,16 +94,33 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
+            Preloader.Visibility = Visibility.Visible;
 
-            desktopController.FirstData();
+            await Task.Run(() =>
+            {
+                var a = desktopController.FirstData();
 
-            BtnEditStatus.IsEnabled = true;
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    if (a == null)
+                        MessageBox.Show("Нет соединения с сервером");
+                    else
+                    {
+                        BtnEditStatus.IsEnabled = true;
 
-            comboAllStatuses.IsEnabled = true;
+                        comboAllStatuses.IsEnabled = true;
 
-            BtnFilter.IsEnabled = true;
+                        BtnFilter.IsEnabled = true;
+                    }
+
+                    Preloader.Visibility = Visibility.Collapsed;
+
+                });
+            });
+
+            
 
         }
 

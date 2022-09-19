@@ -63,11 +63,18 @@ namespace DesktopApplication.View
         /// <param name="e"></param>
         private async void BtnRefreshService_Click(object sender, RoutedEventArgs e)
         {
+            Preloader.Visibility = Visibility.Visible;
+
             await Task.Run(() =>
             {
                 var a = controller.GetModel();
                 if (a == null)
                     MessageBox.Show("Нет соединения с сервером");
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    Preloader.Visibility = Visibility.Collapsed;
+                });
             });
             
         }

@@ -57,18 +57,15 @@ namespace DesktopApplication.Controllers
         /// Начальные данные
         /// </summary>
         /// <returns></returns>
-        public async void FirstData()
+        public IEnumerable<MessagesModel> FirstData()
         {
-            await Task.Run(() =>
-            {
-                GetStatuses();
+            GetStatuses();
 
-                GetMessages();
+            GetMessages();
 
-                TextCountMessagesPeriod = messages.Count();
-            });
-            
-            
+            TextCountMessagesPeriod = (messages != null ? messages.Count() : 0);
+
+            return messages;
         }
 
         /// <summary>
