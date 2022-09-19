@@ -50,7 +50,7 @@ namespace DesktopApplication.Controllers
         {
             string request = SendPostData(classModel.UrlEdit, model);
 
-            return request;
+            return request; //null при отсутствии соединения
         }
 
 

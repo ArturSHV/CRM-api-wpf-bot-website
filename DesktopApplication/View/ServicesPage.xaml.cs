@@ -12,14 +12,13 @@ namespace DesktopApplication.View
     /// </summary>
     public partial class ServicesPage : Page
     {
-        Controller<ServicesModel> servicesController = new Controller<ServicesModel>();
+        Controller<ServicesModel> controller = new Controller<ServicesModel>();
         AddNewServiceWindow serviceWindow;
-        ServicesPageModel servicesPageModel = new ServicesPageModel();
 
         public ServicesPage()
         {
             InitializeComponent();
-            DataContext = servicesPageModel;
+            DataContext = controller;
         }
 
 
@@ -36,7 +35,7 @@ namespace DesktopApplication.View
             {
                 if ((selectedService.Title.Length > 0) && (selectedService.Description.Length > 0))
 
-                    servicesController.EditData(selectedService);
+                    controller.EditData(selectedService);
             }
             
         }
@@ -53,7 +52,7 @@ namespace DesktopApplication.View
 
             serviceWindow.ShowDialog();
 
-            servicesPageModel.PageModelCreator();
+            controller.GetModel();
         }
 
 
@@ -62,9 +61,15 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnRefreshService_Click(object sender, RoutedEventArgs e)
+        private async void BtnRefreshService_Click(object sender, RoutedEventArgs e)
         {
-            servicesPageModel.PageModelCreator();
+            await Task.Run(() =>
+            {
+                var a = controller.GetModel();
+                if (a == null)
+                    MessageBox.Show("Нет соединения с сервером");
+            });
+            
         }
 
         /// <summary>
@@ -72,17 +77,26 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDeleteService_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteService_Click(object sender, RoutedEventArgs e)
         {
             if (dataGridServices.SelectedIndex >= 0)
             {
                 ServicesModel selectedService = dataGridServices.SelectedItem as ServicesModel;
 
-                var result = servicesController.DeleteData(selectedService);
+                await Task.Run(() =>
+                {
+                    var result = controller.DeleteData(selectedService);
 
-                servicesPageModel.PageModelCreator();
+                    if (result != null)
+                    {
+                        controller.GetModel();
 
-                MessageBox.Show(result);
+                        MessageBox.Show(result);
+                    }
+                    else
+                        MessageBox.Show("Нет соединения с сервером");
+                });
+                
             }
             else
                 MessageBox.Show("Выберите услугу");

@@ -98,17 +98,13 @@
     </ApplicationDefinition>
     <Compile Include="Models\ContactsModel.cs" />
     <Compile Include="Models\IModel.cs" />
-    <Compile Include="Models\IPageModel.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\DesktopController.cs" />
     <Compile Include="Lib\GetApiData.cs" />
     <Compile Include="Models\MessagesModel.cs" />
     <Compile Include="Models\ProjectsModel.cs" />
-    <Compile Include="Models\ProjectsPageModel.cs" />
     <Compile Include="Models\BlogsModel.cs" />
     <Compile Include="Models\ServicesModel.cs" />
-    <Compile Include="Models\BlogsPageModel.cs" />
-    <Compile Include="Models\ServicesPageModel.cs" />
     <Compile Include="Models\StatusesModel.cs" />
     <Compile Include="View\AddNewBlogWindow.xaml.cs">
       <DependentUpon>AddNewBlogWindow.xaml</DependentUpon>

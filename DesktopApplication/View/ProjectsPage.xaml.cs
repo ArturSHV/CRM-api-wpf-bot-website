@@ -12,16 +12,14 @@ namespace DesktopApplication.View
     /// </summary>
     public partial class ProjectsPage : Page
     {
-        Controller<ProjectsModel> projectsController = new Controller<ProjectsModel>();
+        Controller<ProjectsModel> сontroller = new Controller<ProjectsModel>();
         AddNewProjectWindow projectWindow;
         EditProjectWindow editProjectWindow;
-
-        ProjectsPageModel projectsPageModel = new ProjectsPageModel();
 
         public ProjectsPage()
         {
             InitializeComponent();
-            DataContext = projectsController;
+            DataContext = сontroller;
         }
 
 
@@ -34,7 +32,7 @@ namespace DesktopApplication.View
         {
             projectWindow = new AddNewProjectWindow();
             projectWindow.ShowDialog();
-            projectsPageModel.PageModelCreator();
+            сontroller.GetModel();
         }
 
 
@@ -43,9 +41,15 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnRefreshProject_Click(object sender, RoutedEventArgs e)
+        private async void BtnRefreshProject_Click(object sender, RoutedEventArgs e)
         {
-            var a = projectsController.GetModel();
+            await Task.Run(() =>
+            {
+                var a = сontroller.GetModel();
+
+                if (a == null)
+                    MessageBox.Show("Нет соединения с сервером");
+            });
         }
 
 
@@ -54,17 +58,25 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDeleteProject_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteProject_Click(object sender, RoutedEventArgs e)
         {
             if (dataGridProjects.SelectedIndex >= 0)
             {
                 ProjectsModel projectsModel = dataGridProjects.SelectedItem as ProjectsModel;
 
-                var result = projectsController.DeleteData(projectsModel);
+                await Task.Run(() =>
+                {
+                    var result = сontroller.DeleteData(projectsModel);
 
-                projectsPageModel.PageModelCreator();
+                    if (result != null)
+                    {
+                        сontroller.GetModel();
 
-                MessageBox.Show(result);
+                        MessageBox.Show(result);
+                    }
+                    else
+                        MessageBox.Show("Нет соединения с сервером");
+                });
             }
             else
                 MessageBox.Show("Выберите проект");
@@ -85,7 +97,6 @@ namespace DesktopApplication.View
             }
             else
                 MessageBox.Show("Выберите проект");
-
         }
     }
 }

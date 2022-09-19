@@ -12,16 +12,14 @@ namespace DesktopApplication.View
     /// </summary>
     public partial class BlogsPage : Page
     {
-        Controller<BlogsModel> blogsController = new Controller<BlogsModel>();
+        Controller<BlogsModel> controller = new Controller<BlogsModel>();
         AddNewBlogWindow blogWindow;
         EditBlogWindow editBlogWindow;
-
-        BlogsPageModel blogsPageModel = new BlogsPageModel();
 
         public BlogsPage()
         {
             InitializeComponent();
-            DataContext = blogsPageModel;
+            DataContext = controller;
         }
 
 
@@ -35,7 +33,7 @@ namespace DesktopApplication.View
             blogWindow = new AddNewBlogWindow();
             blogWindow.ShowDialog();
 
-            blogsPageModel.PageModelCreator();
+            controller.GetModel();
         }
 
 
@@ -44,9 +42,15 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnRefreshBlog_Click(object sender, RoutedEventArgs e)
+        private async void BtnRefreshBlog_Click(object sender, RoutedEventArgs e)
         {
-            blogsPageModel.PageModelCreator();
+            await Task.Run(() =>
+            {
+                var a = controller.GetModel();
+                if (a == null)
+                    MessageBox.Show("Нет соединения с сервером");
+            });
+            
            
         }
 
@@ -56,17 +60,26 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDeleteBlog_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteBlog_Click(object sender, RoutedEventArgs e)
         {
             if (dataGridBlogs.SelectedIndex >= 0)
             {
                 BlogsModel blogsModel = dataGridBlogs.SelectedItem as BlogsModel;
 
-                var result = blogsController.DeleteData(blogsModel);
+                await Task.Run(() =>
+                {
+                    var result = controller.DeleteData(blogsModel);
 
-                blogsPageModel.PageModelCreator();
+                    if (result != null)
+                    {
+                        controller.GetModel();
 
-                MessageBox.Show(result);
+                        MessageBox.Show(result);
+                    }
+                    else
+                        MessageBox.Show("Нет соединения с сервером");
+                });
+
             }
             else
                 MessageBox.Show("Выберите блог");

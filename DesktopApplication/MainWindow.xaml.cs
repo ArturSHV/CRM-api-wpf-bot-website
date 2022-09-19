@@ -1,5 +1,6 @@
 ﻿using DesktopApplication.Models;
 using DesktopApplication.View;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,7 +16,7 @@ namespace DesktopApplication
         ServicesPage services = new ServicesPage();
         ProjectsPage projects = new ProjectsPage();
         BlogsPage blogs = new BlogsPage();
-        ContactsPage contacts;
+        ContactsPage contacts = new ContactsPage();
         Button LastBtnName = new Button();
 
         public MainWindow()
@@ -91,10 +92,9 @@ namespace DesktopApplication
 
         private void Contacts_Click(object sender, RoutedEventArgs e)
         {
-            contacts = new ContactsPage();
-            MainFrame.Content = null;
-            contacts.ShowDialog();
+            MainFrame.Content = contacts;
             ChangeStyleBtn(sender);
+
         }
     }
 }
