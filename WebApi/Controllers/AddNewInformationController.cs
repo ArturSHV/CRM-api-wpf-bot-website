@@ -48,7 +48,8 @@ namespace WebApi.Controllers
             {
                 await context.Messages.AddAsync(new Message { Date = DateTime.Now, Text = json.Text, Email = json.Email, Status = "Получена" });
 
-                await context.Users.AddAsync(new User { Email = json.Email, Name = json.Name });
+                if (context.Users.FirstOrDefault(x=>x.Email == json.Email) == null)
+                    await context.Users.AddAsync(new User { Email = json.Email, Name = json.Name });
 
                 await context.SaveChangesAsync();
 
