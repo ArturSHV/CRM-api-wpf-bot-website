@@ -1,9 +1,7 @@
 ﻿using DesktopApplication.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using static ClassLibrary.GetApiData;
 
 namespace DesktopApplication.Controllers
@@ -12,7 +10,6 @@ namespace DesktopApplication.Controllers
     public class Controller<Model> 
         where Model : IModel, new()
     {
-        public ObservableCollection<Model> forModel { get; set; }
         public IEnumerable<Model> model { get; set; }
 
         IModel classModel = new Model();
@@ -21,7 +18,7 @@ namespace DesktopApplication.Controllers
         /// <summary>
         /// Получение данных
         /// </summary>
-        public ObservableCollection<Model> GetModel()
+        public IEnumerable<Model> GetModel()
         {
             object a = PostData(classModel.UrlGet);
 
@@ -34,11 +31,9 @@ namespace DesktopApplication.Controllers
                     oldString = oldString.Insert(oldString.Length, "]");
                 }
 
-                forModel = JsonConvert.DeserializeObject<ObservableCollection<Model>>(oldString);
-
-                model = forModel;
+                model = JsonConvert.DeserializeObject<IEnumerable<Model>>(oldString);
             }
-            return forModel;
+            return model;
         }
 
 
