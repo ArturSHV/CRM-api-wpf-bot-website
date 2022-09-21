@@ -26,16 +26,30 @@ jQuery(function($) {
     /*=======================================
 	Navigation
 	=======================================*/
-    $("body").on("click", ".nav-triger", function(e) {
-        e.preventDefault();
-        $(".main-menu").slideToggle();
+    //$("body").on("click", ".nav-triger", function(e) {
+    //    e.preventDefault();
+    //    $(".main-menu").slideToggle();
+    //    $(this).toggleClass('active');
+    //    if ($(this).hasClass('active')) {
+    //        $(this).find('span').removeClass("fa-navicon");
+    //        $(this).find('span').addClass("fa-times");
+    //    } else {
+    //        $(this).find('span').removeClass("fa-times");
+    //        $(this).find('span').addClass("fa-navicon");
+    //    }
+    //});
+
+
+    $("body").on("click", ".nav-triger", function (e) {
         $(this).toggleClass('active');
         if ($(this).hasClass('active')) {
             $(this).find('span').removeClass("fa-navicon");
             $(this).find('span').addClass("fa-times");
+            document.getElementsByClassName('main-menu')[0].style.display = "block";
         } else {
             $(this).find('span').removeClass("fa-times");
             $(this).find('span').addClass("fa-navicon");
+            document.getElementsByClassName('main-menu')[0].style.display = "none";
         }
     });
 
