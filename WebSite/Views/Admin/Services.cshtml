@@ -32,11 +32,11 @@
 
                                         <div class="accordion__header">@item.Title</div>
                                         <div class="accordion__content">
-                                        <button  id="@idBtn" type="button" style="margin-bottom: 20px;" onclick="showForm(@item.Id);">Редактировать</button>
+                                        <button  id="@idBtn" type="button" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;" onclick="showForm(@item.Id);">Редактировать</button>
                                         
                                         <form asp-controller="Admin" asp-action="DeleteService" method="post">
                                         <input name="Id" type="text" value="@item.Id" hidden/>
-                                            <button type="submit" style="margin-bottom: 20px;" onclick="return confirm('Вы уверены, что хотите удалить услугу?')" >Удалить</button><br>
+                                            <button type="submit" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;" onclick="return confirm('Вы уверены, что хотите удалить услугу?')" >Удалить</button><br>
                                         </form>
                                             <p>@Html.Raw(item.Description)</p>
                                         </div>
@@ -47,10 +47,10 @@
                                 <div>
                                      <form asp-controller="Admin" asp-action="EditService" enctype="multipart/form-data" method="post" class="display-none" id="@idForm">
                                      <input name="Id" value="@item.Id" hidden/>
-                                     <div><input name="Title" value="@item.Title" required style="width:100%;margin-top: 50px;"/></div> 
+                                     <div><input name="Title" value="@item.Title" maxlength="85" required style="width:100%;margin-top: 50px;"/></div> 
                                      <div> 
-                                     <input type="submit" style="margin-bottom: 20px;" value="Сохранить"/><br>
-                                         <p><textarea name="Description" required>@item.Description</textarea></p>
+                                     <input type="submit" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;" value="Сохранить"/><br>
+                                         <p><textarea name="Description" maxlength="4026" required>@item.Description</textarea></p>
                                      </div>
                                      </form>
                                 </div>

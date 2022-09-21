@@ -14,20 +14,20 @@
         <form asp-controller="Admin" asp-action="AddService" enctype="multipart/form-data" method="post" id="formSend">
             <div class="container">
                 <div class="text-center mb-50 head">
-                    <h2 class="mb-25"><input type="text" value="" placeholder="Название" asp-for="Title" required/></h2>
+                    <h2 class="mb-25"><input type="text" value="" placeholder="Название" maxlength="4026" asp-for="Title" required/></h2>
                 </div>
                 <div class="row courses">
                     <div>
                         
-                        <input class="add_text" type="button" value="Перенос строки">
-                        <input class="add_text" type="button" value="Открыть абзац">
-                        <input class="add_text" type="button" value="Закрыть абзац">
-                        <input class="add_text" type="button" value="Открыть жирный шрифт">
-                        <input class="add_text" type="button" value="Закрыть жирный шрифт">
+                        <input class="add_text" type="button" value="<br/>">
+                        <input class="add_text" type="button" value="<p>">
+                        <input class="add_text" type="button" value="</p>">
+                        <input class="add_text" type="button" value="<b>">
+                        <input class="add_text" type="button" value="</b>">
 
-                        <textarea asp-for="Description" id="info_sms_id" required placeholder="Описание"></textarea>
+                        <textarea asp-for="Description" id="info_sms_id" required maxlength="85" placeholder="Описание"></textarea>
                     </div>
-                    <input type="submit" style="margin-bottom: 20px;" value="Сохранить"/><br>
+                    <input type="submit" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;" value="Сохранить"/><br>
                 </div>
             </div>
         </form>

@@ -20,8 +20,8 @@
                             <p style="text-align: left; color:gray;"><input type="text" asp-for="CreateDate" value="@Model.CreateDate.ToShortDateString()" required/></p>
                         </div>
                         <div class="row courses">
-                            <input type="submit" style="margin-bottom: 20px;" value="Сохранить"/><br>
-                            <div class="image-upload" style="display:flex">
+                            <input type="submit" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;" value="Сохранить"/><br>
+                            <div class="image-upload" style="display:flex"> 
                                 <div style="width:40%">
                                     <label for="file-input">
                                     <input asp-for="Image" type="hidden" value="@Model.Image"/>
@@ -30,11 +30,11 @@
                                 </div>
                                 <div style="width: 55%;margin-left: 20px;">
                                 
-                                <input class="add_text" type="button" value="Перенос строки">
-                                <input class="add_text" type="button" value="Открыть абзац">
-                                <input class="add_text" type="button" value="Закрыть абзац">
-                                <input class="add_text" type="button" value="Открыть жирный шрифт">
-                                <input class="add_text" type="button" value="Закрыть жирный шрифт">
+                                <input class="add_text" type="button" value="<br/>">
+                                <input class="add_text" type="button" value="<p>">
+                                <input class="add_text" type="button" value="</p>">
+                                <input class="add_text" type="button" value="<b>">
+                                <input class="add_text" type="button" value="</b>">
 
                                    <textarea asp-for="Description" id="info_sms_id" required>@Model.Description</textarea>
                                 </div>
@@ -56,10 +56,10 @@
                     </div>
                     </div>
                     <div class="row courses">
-                        <button  id="btn" type="button" style="margin-bottom: 20px;">Редактировать</button>
+                        <button  id="btn" type="button" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;">Редактировать</button>
                         <form asp-controller="Admin" asp-action="DeleteBlog" method="post">
                         <input asp-for="Id" value="@Model.Id" hidden/>
-                            <input type="submit" style="margin-bottom: 20px;" value="Удалить" onclick="return confirm('Вы уверены, что хотите удалить блог?')" /><br>
+                            <input type="submit" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;" value="Удалить" onclick="return confirm('Вы уверены, что хотите удалить блог?')" /><br>
                         </form>
                         @Html.Raw(Model.Description)
                     </div>

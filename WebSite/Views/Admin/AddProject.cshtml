@@ -14,10 +14,10 @@
         <form asp-controller="Admin" asp-action="AddProject" enctype="multipart/form-data" method="post" id="formSend">
             <div class="container">
                 <div class="text-center mb-50 head">
-                    <h2 class="mb-25"><input type="text" value="" placeholder="Название" asp-for="Title" required/></h2>
+                    <h2 class="mb-25"><input type="text" value="" placeholder="Название" maxlength="85" asp-for="Title" required/></h2>
                 </div>
                 <div class="row courses">
-                    <input type="submit" style="margin-bottom: 20px;" value="Сохранить"/><br>
+                    <input type="submit" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;" value="Сохранить"/><br>
                     <div class="image-upload" style="display:flex">
                         <div style="width:40%">
                             <p style="color:red">@ViewBag.Message</p>
@@ -28,13 +28,13 @@
                         </div>
                         <div style="width: 55%;margin-left: 20px;">
                             
-                           <input class="add_text" type="button" value="Перенос строки">
-                           <input class="add_text" type="button" value="Открыть абзац">
-                           <input class="add_text" type="button" value="Закрыть абзац">
-                           <input class="add_text" type="button" value="Открыть жирный шрифт">
-                           <input class="add_text" type="button" value="Закрыть жирный шрифт">
+                           <input class="add_text" type="button" value="<br/>">
+                           <input class="add_text" type="button" value="<p>">
+                           <input class="add_text" type="button" value="</p>">
+                           <input class="add_text" type="button" value="<b>">
+                           <input class="add_text" type="button" value="</b>">
 
-                           <textarea asp-for="Description" id="info_sms_id" required placeholder="Описание"></textarea>
+                           <textarea asp-for="Description" id="info_sms_id" maxlength="4026" required placeholder="Описание"></textarea>
                         </div>
                         <input id="file-input" accept=".png, .jpg, .jpeg" name="formFile" type="file" onchange="previewFile(this);" style="display: none;" />
                     </div>
