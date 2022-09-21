@@ -18,6 +18,8 @@ namespace TelegramBot
 
         static string errorMessage = "Ошибка запроса";
 
+        static int adminChatId = 1887400468;
+
 
 
         public static void Main(string[] args)
@@ -38,12 +40,15 @@ namespace TelegramBot
             {
                 if (message.Text != null)
                 {
-                    Console.WriteLine($"{message.Chat.Username} : {message.Text}");
+                    Console.WriteLine($"{message.Chat.FirstName} : {message.Text} : {message.Chat.Id}");
 
                     responseModel = Response(update);
 
                     await botClient.SendTextMessageAsync(message.Chat.Id, responseModel.textResponse,  
                         replyMarkup: responseModel.replyKeyboardMarkup);
+
+                    if (responseModel.textResponse.Contains("Ваше сообщение принято"))
+                        await botClient.SendTextMessageAsync(adminChatId, $"Поступило сообщение: {message.Text} от {message.Chat.Username}");
 
                     return;
                 }
@@ -209,7 +214,7 @@ namespace TelegramBot
                             };
 
                             textResponse = (services.FirstOrDefault(x => x.Title == message) != null ?
-                                blogs.FirstOrDefault(x => x.Title == message).Description : errorMessage);
+                                services.FirstOrDefault(x => x.Title == message).Description : errorMessage);
 
                             textResponse = Regex.Replace(textResponse, "<.*?>", String.Empty);
 
@@ -250,7 +255,7 @@ namespace TelegramBot
                             };
 
                             textResponse = (projects.FirstOrDefault(x => x.Title == message) != null ?
-                                blogs.FirstOrDefault(x => x.Title == message).Description : errorMessage);
+                                projects.FirstOrDefault(x => x.Title == message).Description : errorMessage);
 
                             textResponse = Regex.Replace(textResponse, "<.*?>", String.Empty);
 
