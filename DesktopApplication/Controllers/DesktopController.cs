@@ -182,8 +182,6 @@ namespace DesktopApplication.Controllers
         {
             await Task.Run(() =>
             {
-                GetStatuses();
-
                 GetMessages();
 
                 messages = forMessages.Where(x => x.status == status.Name);

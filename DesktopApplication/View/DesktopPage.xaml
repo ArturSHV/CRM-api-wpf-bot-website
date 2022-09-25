@@ -185,7 +185,7 @@
         <ComboBox Style="{DynamicResource ComboBoxStyle1}" 
                   x:Name="comboAllStatuses"
                   ItemsSource="{Binding statuses}"
-                  Margin="5,0,0,0" 
+                  Margin="5,0,0,0"
                   SelectionChanged="comboAllStatuses_SelectionChanged"
                   IsEnabled="False">
             <ComboBox.ItemTemplate>
