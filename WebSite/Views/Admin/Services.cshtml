@@ -47,7 +47,7 @@
                                 <div>
                                      <form asp-controller="Admin" asp-action="EditService" enctype="multipart/form-data" method="post" class="display-none" id="@idForm">
                                      <input name="Id" value="@item.Id" hidden/>
-                                     <div><input name="Title" value="@item.Title" maxlength="85" required style="width:100%;margin-top: 50px;"/></div> 
+                                     <div><input type="text" name="Title" value="@item.Title" maxlength="85" required style="width:100%;margin-top: 50px;"/></div> 
                                      <div> 
                                      <input type="submit" class="btn btn-default btn-head mt-20 mb-50" style="margin-bottom: 20px;" value="Сохранить"/><br>
                                          <p><textarea name="Description" maxlength="4026" required>@item.Description</textarea></p>
