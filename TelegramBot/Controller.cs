@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Telegram.Bot.Types.ReplyMarkups;
+using TelegramBot.Api;
+using TelegramBot.Helpers;
 using TelegramBot.Models;
-using static ClassLibrary.GetApiData;
 
 namespace TelegramBot
 {
@@ -13,26 +14,20 @@ namespace TelegramBot
 
         IModel classModel = new Model();
 
+        DataApi dataApi = new DataApi();
+
+        MessageCreate messageCreate = new MessageCreate();
+
 
         /// <summary>
         /// Получение данных
         /// </summary>
         public IEnumerable<Model> GetModel()
         {
-            object a = PostData(classModel.UrlGet);
+            var a = dataApi.GetModel(classModel.UrlGet);
 
-            if (a != null)
-            {
-                var oldString = a.ToString();
-                if (a.ToString().IndexOf('[') == -1)
-                {
-                    oldString = oldString.Insert(0, "[");
-                    oldString = oldString.Insert(oldString.Length, "]");
-                }
+            model = messageCreate.Response(a, messageCreate.ReturnListModelInView<Model>(a));
 
-                model = JsonConvert.DeserializeObject<IEnumerable<Model>>(oldString);
-
-            }
             return model;
         }
 
@@ -59,9 +54,11 @@ namespace TelegramBot
         /// <returns></returns>
         public string AddData(Model model)
         {
-            string request = SendPostData(classModel.UrlAdd, model);
+            string request = dataApi.AddModel(new { model = model }, classModel.UrlAdd);
 
-            return request;
+            var message = messageCreate.ReturnMessage(request);
+
+            return message;
         }
 
 

@@ -6,7 +6,7 @@
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public string UrlGet { get => "https://localhost:44369/api/GetServices"; }
+        public string UrlGet { get => "GetServices"; }
 
         public string UrlAdd => null;
     }

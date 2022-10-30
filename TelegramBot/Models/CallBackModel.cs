@@ -16,6 +16,6 @@ namespace TelegramBot.Models
 
         public string UrlGet => null;
 
-        public string UrlAdd => "https://localhost:44369/api/SendRequest";
+        public string UrlAdd => "SendRequest";
     }
 }

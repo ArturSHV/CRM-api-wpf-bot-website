@@ -29,7 +29,7 @@ namespace WebSite.Controllers
                 {
                     var mainPageString = JObject.Parse(a)["result"]?["items"]?.ToString();
 
-                    var mainPage = JsonConvert.DeserializeObject<List<MainPageModel>>(mainPageString);
+                    var mainPage = JsonConvert.DeserializeObject<MainPageModel>(mainPageString);
 
                     return View(mainPage);
                 }

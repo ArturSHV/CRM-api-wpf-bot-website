@@ -10,7 +10,7 @@ namespace TelegramBot.Models
         public string Description { get; set; }
         public DateTime CreateDate { get; set; }
 
-        public string UrlGet { get => "https://localhost:44369/api/GetBlogs"; }
+        public string UrlGet { get => "GetBlogs"; }
 
         public string UrlAdd => null;
     }

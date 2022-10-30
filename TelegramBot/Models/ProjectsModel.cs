@@ -8,7 +8,7 @@
         public string Image { get; set; }
         public string Description { get; set; }
 
-        public string UrlGet { get => "https://localhost:44369/api/GetProjects"; }
+        public string UrlGet { get => "GetProjects"; }
 
         public string UrlAdd => null;
     }
