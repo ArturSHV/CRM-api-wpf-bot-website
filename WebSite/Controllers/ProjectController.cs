@@ -19,19 +19,26 @@ namespace WebSite.Controllers
         {
             ViewData["title"] = "Проекты";
 
-            var a = dataApi.GetProjects();
+            var a = dataApi.GetModel("GetProjects");
 
-            if (a != null)
+            try
             {
-                string c = JArray.FromObject(a).ToString();
+                var response = JsonConvert.DeserializeObject<Response>(a);
 
-                List<Projects>? projects = JsonConvert.DeserializeObject<List<Projects>>(c);
+                if (response?.ok == true)
+                {
+                    var projectsString = JObject.Parse(a)["result"]?["items"]?.ToString();
 
-                return View(projects);
+                    var projects = JsonConvert.DeserializeObject<List<Projects>>(projectsString);
+
+                    return View(projects);
+                }
+
             }
-            else
-                return View();
-            
+            catch {}
+
+            return View();
+
         }
 
 
@@ -43,20 +50,27 @@ namespace WebSite.Controllers
         /// <returns></returns>
         public IActionResult View([FromRoute] int id)
         {
-            var a = dataApi.GetSelectedProject(id);
+            var a = dataApi.GetSelectedModel("GetProjects", id);
 
-            if (a != null)
+            try
             {
-                string c = JObject.FromObject(a).ToString();
+                var response = JsonConvert.DeserializeObject<Response>(a);
 
-                Projects? project = JsonConvert.DeserializeObject<Projects>(c);
+                if (response?.ok == true)
+                {
+                    var projectString = JObject.Parse(a)["result"]?["items"]?.ToString();
 
-                ViewData["title"] = project.Title;
+                    var project = JsonConvert.DeserializeObject<Projects>(projectString);
 
-                return View(project);
+                    ViewData["title"] = project?.Title;
+
+                    return View(project);
+                }    
+                
             }
-            else
-                return Redirect("/NotFound/");
+            catch { }
+
+            return Redirect("/NotFound/");
 
         }
 

@@ -15,23 +15,23 @@
 	txtarea.selectionEnd = (start == end) ? (end + text.length) : end;
 }
 $('.add_text').click(function () {
-	if ($(this).val() == "Перенос строки") {
-		insertText('info_sms_id', "</br>");
+	if ($(this).val() == "<br/>") {
+		insertText('info_sms_id', "<br/>");
 	}
 
-	if ($(this).val() == "Открыть абзац") {
+	if ($(this).val() == "<p>") {
 		insertText('info_sms_id', "<p>");
 	}
 
-	if ($(this).val() == "Закрыть абзац") {
+	if ($(this).val() == "</p>") {
 		insertText('info_sms_id', "</p>");
 	}
 
-	if ($(this).val() == "Открыть жирный шрифт") {
+	if ($(this).val() == "<b>") {
 		insertText('info_sms_id', "<b>");
 	}
 
-	if ($(this).val() == "Закрыть жирный шрифт") {
+	if ($(this).val() == "</b>") {
 		insertText('info_sms_id', "</b>");
 	}
 });

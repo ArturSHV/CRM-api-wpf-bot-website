@@ -6,28 +6,6 @@ namespace ClassLibrary
 {
     public static class GetApiData
     {
-
-        /// <summary>
-        /// получить данные
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        private static object? GetData(this RestRequest request, string url)
-        {
-            string? stream = GetStream(request, url);
-            if (!string.IsNullOrEmpty(stream))
-            {
-                object? data = JsonConvert.DeserializeObject(stream);
-
-                return data;
-            }
-            else
-                return null;
-
-        }
-
-
         /// <summary>
         /// Получить поток stream
         /// </summary>
@@ -47,28 +25,16 @@ namespace ClassLibrary
 
 
         /// <summary>
-        /// Отправка запроса. Возвращает Request
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        private static RestRequest SendRequest(string url, Method method)
-        {
-            RestRequest request = new (url, method);
-
-            //request.AddHeader("Content-Type", "multipart/form-data");
-
-            return request;
-        }
-
-
-        /// <summary>
         /// Получить данные Post запроса
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
         public static object? PostData(string url)
         {
-            var a = SendRequest(url, Method.Post).GetData(url);
+            RestRequest request = new(url, Method.Post);
+
+            var a = request.GetStream(url);
+
             return a;
         }
 
@@ -80,7 +46,10 @@ namespace ClassLibrary
         /// <returns></returns>
         public static object? GetData(string url)
         {
-            var a = SendRequest(url, Method.Get).GetData(url);
+            RestRequest request = new(url, Method.Get);
+
+            var a = request.GetStream(url);
+
             return a;
         }
 
@@ -94,7 +63,7 @@ namespace ClassLibrary
         /// <returns></returns>
         public static string? SendPostData<T>(string url, T model)
         {
-            RestRequest request = SendRequest(url, Method.Post);
+            RestRequest request = new(url, Method.Post);
 
             string c = JsonConvert.SerializeObject(model);
 

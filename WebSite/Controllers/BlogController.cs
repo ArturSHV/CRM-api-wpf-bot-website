@@ -18,22 +18,25 @@ public class BlogController : Controller
     {
         ViewData["title"] = "Блоги";
 
-        var a = dataApi.GetBlogs();
+        var a = dataApi.GetModel("GetBlogs");
 
-        if (a != null)
+        try
         {
-            string c = JArray.FromObject(a).ToString();
+            var response = JsonConvert.DeserializeObject<Response>(a);
 
-            List<Blogs>? blogs = JsonConvert.DeserializeObject<List<Blogs>>(c);
+            if (response?.ok == true)
+            {
+                var blogsString = JObject.Parse(a)["result"]?["items"]?.ToString();
 
-            //var selectedUser = user.Where(x => x.Id == 4).FirstOrDefault(); //.Equals("jenmay")
+                var blogs = JsonConvert.DeserializeObject<List<Blogs>>(blogsString);
 
-            return View(blogs);
+                return View(blogs);
+            }
+
         }
-        else
-            return View();
-        
+        catch { }
 
+        return View();
     }
 
 
@@ -46,20 +49,27 @@ public class BlogController : Controller
     [Route("{controller}/{action}/{id}")]
     public IActionResult View(int id)
     {
-        var a = dataApi.GetSelectedBlog(id);
+        var a = dataApi.GetSelectedModel("GetBlogs", id);
 
-        if (a != null)
+        try
         {
-            string c = JObject.FromObject(a).ToString();
+            var response = JsonConvert.DeserializeObject<Response>(a);
 
-            Blogs? blog = JsonConvert.DeserializeObject<Blogs>(c);
+            if (response?.ok == true)
+            {
+                var blogString = JObject.Parse(a)["result"]?["items"]?.ToString();
 
-            ViewData["title"] = blog.Title;
+                var blog = JsonConvert.DeserializeObject<Blogs>(blogString);
 
-            return View(blog);
+                ViewData["title"] = blog?.Title;
+
+                return View(blog);
+            }
+
         }
-        else
-            return Redirect("/NotFound/");
+        catch { }
+
+        return Redirect("/NotFound/");
 
     }
 

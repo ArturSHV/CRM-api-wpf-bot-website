@@ -1,6 +1,6 @@
 ﻿namespace WebSite.Models
 {
-    public class Projects
+    public class Projects : IModel
     {
         public int Id { get; set; }
         public string Title { get; set; }

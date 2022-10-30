@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using WebSite.Api;
 using WebSite.Models;
 
@@ -18,20 +19,26 @@ namespace WebSite.Controllers
         {
             ViewData["title"] = "Услуги";
 
-            var a = dataApi.GetServices();
+            var a = dataApi.GetModel("GetServices");
 
-            if (a != null)
+            try
             {
-                var c = a.ToString();
+                var response = JsonConvert.DeserializeObject<Response>(a);
 
-                List<Services>? services = JsonConvert.DeserializeObject<List<Services>>(c);
+                if (response?.ok == true)
+                {
+                    var servicesString = JObject.Parse(a)["result"]?["items"]?.ToString();
 
-                return View(services);
+                    var services = JsonConvert.DeserializeObject<List<Services>>(servicesString);
+
+                    return View(services);
+                }
+
             }
-            else
-                return View();
+            catch { }
 
-            
+            return View();
+
         }
 
 

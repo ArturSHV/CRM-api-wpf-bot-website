@@ -195,9 +195,12 @@ namespace DesktopApplication.View
 
                 var status = ComboBoxChangeStatus.SelectedItem as StatusesModel;
 
-                MessagesModel messagesModel = new MessagesModel() { id = id, status = status.Name };
-
-                desktopController.EditStatus(messagesModel);
+                if (status != null)
+                {
+                    MessagesModel messagesModel = new MessagesModel() { id = id, status = status.Name, name = "ads", contact = "asd", text = "asd" };
+                    desktopController.EditStatus(messagesModel);
+                }
+              
             }
 
         }

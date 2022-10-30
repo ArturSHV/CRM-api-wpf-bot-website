@@ -7,7 +7,7 @@ namespace WebSite.Helpers
     /// </summary>
     public class CheckAuthorization
     {
-        public Authorize authorize = new() { Host = "", Login = "", IP = "", UserAgent = "", Role = 1};
+        public Authorize authorize = new() { Host = "", Login = "", IP = "", UserAgent = "", Role = "", Token = ""};
 
         /// <summary>
         /// проверка наличия информации в куки
@@ -20,22 +20,25 @@ namespace WebSite.Helpers
                 httpContext.Session.Keys.Contains("Role") &&
                 httpContext.Session.Keys.Contains("Host") &&
                 httpContext.Session.Keys.Contains("IP") &&
-                httpContext.Session.Keys.Contains("userAgent"))
+                httpContext.Session.Keys.Contains("userAgent") &&
+                httpContext.Session.Keys.Contains("Token"))
             {
                 if (!String.IsNullOrEmpty(httpContext.Session.GetString("Login")) &&
                     !String.IsNullOrEmpty(httpContext.Session.GetString("Role")) &&
                     !String.IsNullOrEmpty(httpContext.Session.GetString("Host")) &&
                     !String.IsNullOrEmpty(httpContext.Session.GetString("IP")) &&
-                    !String.IsNullOrEmpty(httpContext.Session.GetString("userAgent")))
+                    !String.IsNullOrEmpty(httpContext.Session.GetString("userAgent")) &&
+                    !String.IsNullOrEmpty(httpContext.Session.GetString("Token")))
                 {
                     
                     authorize = new()
                     {
                         Host = httpContext.Session.GetString("Host"),
-                        Role = Convert.ToInt32(httpContext.Session.GetString("Role")),
+                        Role = httpContext.Session.GetString("Role"),
                         IP = httpContext.Session.GetString("IP"),
                         Login = httpContext.Session.GetString("Login"),
-                        UserAgent = httpContext.Session.GetString("userAgent")
+                        UserAgent = httpContext.Session.GetString("userAgent"),
+                        Token = httpContext.Session.GetString("Token")
                     };
                 }
 

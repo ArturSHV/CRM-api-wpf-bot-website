@@ -19,18 +19,25 @@ namespace WebSite.Controllers
         {
             ViewData["title"] = "Главная страница";
 
-            var a = dataApi.GetMainPage();
+            var a = dataApi.GetModel("GetMainPage");
 
-            if (a != null)
+            try
             {
-                string c = JObject.FromObject(a).ToString();
+                var response = JsonConvert.DeserializeObject<Response>(a);
 
-                MainPageModel? mainPageModel = JsonConvert.DeserializeObject<MainPageModel>(c);
+                if (response?.ok == true)
+                {
+                    var mainPageString = JObject.Parse(a)["result"]?["items"]?.ToString();
 
-                return View(mainPageModel);
+                    var mainPage = JsonConvert.DeserializeObject<List<MainPageModel>>(mainPageString);
+
+                    return View(mainPage);
+                }
+
             }
-            else
-                return View();
+            catch { }
+
+            return View();
         }
 
 
@@ -42,13 +49,20 @@ namespace WebSite.Controllers
         [HttpPost]
         public string Responser(CallBackModel callBackModel)
         {
-            var a = dataApi.CallBack(callBackModel);
+            var a = dataApi.AddModel(new { model = callBackModel }, "SendRequest");
 
-            if (a != null)
-                return "true";
-            
-            else
-                return "false";
+            try
+            {
+                var response = JsonConvert.DeserializeObject<Response>(a);
+
+                if (response?.ok == true)
+                {
+                    return "true";
+                }
+            }
+            catch { }
+
+            return "false";
         }
 
     }

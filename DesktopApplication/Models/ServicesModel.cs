@@ -6,12 +6,12 @@
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public string UrlGet { get => "https://localhost:44369/api/GetServices"; }
+        public string UrlGet { get => "GetServices"; }
 
-        public string UrlEdit { get => "https://localhost:44369/api/EditService"; }
+        public string UrlEdit { get => "EditService"; }
 
-        public string UrlDelete { get => "https://localhost:44369/api/DeleteService"; }
+        public string UrlDelete { get => "DeleteService"; }
 
-        public string UrlAdd { get => "https://localhost:44369/api/AddService"; }
+        public string UrlAdd { get => "AddService"; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace WebSite.Models
 {
-    public class Contacts
+    public class Contacts : IModel
     {
         public int Id { get; set; }
         public string Title { get; set; }

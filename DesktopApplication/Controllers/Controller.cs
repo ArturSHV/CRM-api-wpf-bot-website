@@ -1,8 +1,11 @@
-﻿using DesktopApplication.Models;
+﻿using DesktopApplication.Api;
+using DesktopApplication.Models;
 using Newtonsoft.Json;
 using PropertyChanged;
 using System.Collections.Generic;
-using static ClassLibrary.GetApiData;
+using DesktopApplication.Helpers;
+
+
 
 namespace DesktopApplication.Controllers
 {
@@ -14,25 +17,20 @@ namespace DesktopApplication.Controllers
 
         IModel classModel = new Model();
 
+        DataApi dataApi = new DataApi();
+
+        MessageCreate messageCreate = new MessageCreate();
+
 
         /// <summary>
         /// Получение данных
         /// </summary>
         public IEnumerable<Model> GetModel()
         {
-            object a = PostData(classModel.UrlGet);
+            var a = dataApi.GetModel(classModel.UrlGet);
 
-            if (a != null)
-            {
-                var oldString = a.ToString();
-                if (a.ToString().IndexOf('[') == -1)
-                {
-                    oldString = oldString.Insert(0, "[");
-                    oldString = oldString.Insert(oldString.Length, "]");
-                }
+            model = messageCreate.Response(a, messageCreate.ReturnListModelInView<Model>(a));
 
-                model = JsonConvert.DeserializeObject<IEnumerable<Model>>(oldString);
-            }
             return model;
         }
 
@@ -43,9 +41,11 @@ namespace DesktopApplication.Controllers
         /// <param name="model"></param>
         public string EditData(Model model)
         {
-            string request = SendPostData(classModel.UrlEdit, model);
+            string request = dataApi.EditModel(new {token = Token.token, model = model }, classModel.UrlEdit);
 
-            return request; //null при отсутствии соединения
+            var message = messageCreate.ReturnMessage(request);
+
+            return message;
         }
 
 
@@ -56,9 +56,11 @@ namespace DesktopApplication.Controllers
         /// <returns></returns>
         public string AddData(Model model)
         {
-            string request = SendPostData(classModel.UrlAdd, model);
+            string request = dataApi.AddModel(new {token = Token.token, model = model}, classModel.UrlAdd);
 
-            return request;
+            var message = messageCreate.ReturnMessage(request);
+
+            return message;
         }
 
 
@@ -68,9 +70,11 @@ namespace DesktopApplication.Controllers
         /// <param name="model"></param>
         public string DeleteData(Model model)
         {
-            string request = SendPostData(classModel.UrlDelete, model);
+            string request = dataApi.DeleteModel(new {token = Token.token, model = model.Id}, classModel.UrlDelete);
 
-            return request;
+            var message = messageCreate.ReturnMessage(request);
+
+            return message;
         }
     }
 

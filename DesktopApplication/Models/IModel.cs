@@ -2,6 +2,7 @@
 {
     public interface IModel
     {
+        int Id { get; set; }
         /// <summary>
         /// Ссылка апи на получение данных
         /// </summary>

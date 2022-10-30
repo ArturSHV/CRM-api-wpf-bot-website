@@ -1,9 +1,13 @@
-﻿using DesktopApplication.Models;
+﻿using DesktopApplication.Api;
+using DesktopApplication.Models;
 using DesktopApplication.View;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using DesktopApplication.Helpers;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace DesktopApplication
 {
@@ -18,10 +22,14 @@ namespace DesktopApplication
         BlogsPage blogs = new BlogsPage();
         ContactsPage contacts = new ContactsPage();
         Button LastBtnName = new Button();
+        MessageCreate messageCreate = new MessageCreate();
+        DataApi dataApi = new DataApi();
+        Account account;
 
         public MainWindow()
         {
             InitializeComponent();
+            
         }
 
 
@@ -94,6 +102,43 @@ namespace DesktopApplication
         {
             MainFrame.Content = contacts;
             ChangeStyleBtn(sender);
+
+        }
+
+        /// <summary>
+        /// Авторизация в системе
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnterBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(Login.Text) && !string.IsNullOrEmpty(Password.Password))
+            {
+                account = new Account() { Login = Login.Text, Password = Password.Password };
+
+                var a = dataApi.GetToken(account);
+
+                if (a == null)
+                {
+                    MessageBox.Show("Отсутсвует соединение с сервером");
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    try
+                    {
+                        Token.token = JObject.Parse(a)["result"]["token"].Value<string>();
+                        BackgroundPanelLogin.Visibility = Visibility.Collapsed;
+                        PanelLogin.Visibility = Visibility.Collapsed;
+                    }
+                    catch
+                    {
+                        MessageBox.Show(messageCreate.ReturnMessage(a));
+                    }
+                }
+            }
+            else
+                MessageBox.Show("Введите логин и пароль");
 
         }
     }

@@ -24,7 +24,7 @@ app.UseRouting();
 app.UseSession();
 
 
-app.UseStatusCodePagesWithRedirects("/NotFound/");
+app.UseStatusCodePagesWithRedirects("/Error/Not Found/404");
 
 app.MapControllerRoute(
     name: "default",

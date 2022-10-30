@@ -7,9 +7,9 @@
         public string Description { get; set; }
         public string MapScript { get; set; }
 
-        public string UrlGet => @"https://localhost:44369/api/GetContacts";
+        public string UrlGet { get => "GetContacts"; } 
 
-        public string UrlEdit => @"https://localhost:44369/api/EditContacts";
+        public string UrlEdit { get => "EditContacts"; }
 
         public string UrlDelete => null;
 

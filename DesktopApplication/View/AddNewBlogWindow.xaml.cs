@@ -1,4 +1,5 @@
-﻿using DesktopApplication.Controllers;
+﻿using DesktopApplication.Api;
+using DesktopApplication.Controllers;
 using DesktopApplication.Models;
 using System;
 using System.Windows;
@@ -27,8 +28,6 @@ namespace DesktopApplication.View
         /// <param name="e"></param>
         private void BtnSaveNewBlog_Click(object sender, RoutedEventArgs e)
         {
-            var a = filePath;
-
             if (!string.IsNullOrEmpty(Title.Text) &&
                 !string.IsNullOrEmpty(Description.Text) &&
                 !string.IsNullOrEmpty(filePath))

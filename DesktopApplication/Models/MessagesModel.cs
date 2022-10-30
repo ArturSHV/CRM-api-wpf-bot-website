@@ -13,8 +13,8 @@ namespace DesktopApplication.Models
         public string status { get; set; }
 
 
-        public string urlGetMessages { get => "https://localhost:44369/api/GetMessages"; }
-        public string urlEditMessage { get => "https://localhost:44369/api/EditStatus"; }
+        public string urlGetMessages { get => "GetMessages"; }
+        public string urlEditMessage { get => "EditStatus"; }
 
 
         

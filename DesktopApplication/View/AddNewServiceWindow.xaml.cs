@@ -33,7 +33,7 @@ namespace DesktopApplication.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnSaveNewService_Click(object sender, RoutedEventArgs e)
+        private async void BtnSaveNewService_Click(object sender, RoutedEventArgs e)
         {
             string title = Title.Text;
 
@@ -47,11 +47,14 @@ namespace DesktopApplication.View
 
                 servicesModel = new ServicesModel() { Title = title, Description = descripton };
 
-                var result = servicesController.AddData(servicesModel);
-
-                MessageBox.Show(result);
-
                 Close();
+
+                await Task.Run(() =>
+                {
+                    var result = servicesController.AddData(servicesModel);
+
+                    MessageBox.Show(result);
+                });
             }
         }
 

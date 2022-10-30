@@ -5,14 +5,15 @@ using WebSite.Models;
 using WebSite.Api;
 using WebSite.Helpers;
 using System.Net;
+using static WebSite.Helpers.FileHelper;
+
+
 
 namespace WebSite.Controllers
 {
-   
     public class AdminController : Controller
     {
-        CheckAuthorization checkAuthorization = new();
-        Authorize? authorize;
+        
         DataApi dataApi = new();
 
 
@@ -23,17 +24,18 @@ namespace WebSite.Controllers
         /// <returns></returns>
         private bool GiveAccess()
         {
-            string Host = Dns.GetHostName();
-            string IP = Dns.GetHostByName(Host).AddressList[1].ToString();
-            string userAgent = HttpContext.Request.Headers["User-Agent"];
+            CheckAuthorization checkAuthorization = new(); //класс проверки куки
+
+            string Host = Dns.GetHostName(); //получить текущий хост
+            string IP = Dns.GetHostByName(Host).AddressList[1].ToString(); //получить текущий ip
+            string userAgent = HttpContext.Request.Headers["User-Agent"]; //получить текущий user-agent
 
             Authorize sessionAuthorize = checkAuthorization.Check(HttpContext);
-            authorize = new Authorize() { Host = Host, IP = IP, UserAgent = userAgent, Login = sessionAuthorize.Login};
+            var authorize = new Authorize() { Host = Host, IP = IP, UserAgent = userAgent};
 
             if ((sessionAuthorize.UserAgent == authorize.UserAgent) &&
                 (sessionAuthorize.Host == authorize.Host) &&
-                (sessionAuthorize.Login == authorize.Login) &&
-                (sessionAuthorize.Role == 2) &&
+                (sessionAuthorize.Role == "Администратор") &&
                 (sessionAuthorize.IP == authorize.IP))
             {
                 return true;
@@ -43,30 +45,96 @@ namespace WebSite.Controllers
                 
         }
 
-
         /// <summary>
-        /// Создание MessageWithStatus
+        /// получить токен с куки
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="status"></param>
+        /// <param name="httpContext"></param>
         /// <returns></returns>
-        private MessageWithStatus? CreateMWS(object? a, object? status)
+        private string? GetTokenFromCookie(HttpContext httpContext)
         {
-            MessageWithStatus messageWithStatus = null;
-            if ((a != null) && (status != null))
+            string token = "";
+            if (httpContext.Session.Keys.Contains("Token"))
             {
-                string c = JArray.FromObject(a).ToString();
-                string s = JArray.FromObject(status).ToString();
-
-                List<MessageStatus>? messageStatuses = JsonConvert.DeserializeObject<List<MessageStatus>>(c);
-                List<Statuses>? statuses = JsonConvert.DeserializeObject<List<Statuses>>(s);
-
-                messageWithStatus = new MessageWithStatus() { messageStatus = messageStatuses, statuses = statuses };
+                if (!String.IsNullOrEmpty(httpContext.Session.GetString("Token")))
+                {
+                    token = httpContext.Session.GetString("Token");
+                }
             }
 
-            return messageWithStatus;
+            return token;
         }
-        
+
+
+        /// <summary>
+        /// Действия для моделей
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        private IActionResult ReturnModelInView<T>(string responseFromServer)
+            where T : IModel
+        {
+            var modelString = JObject.Parse(responseFromServer)["result"]?["items"]?.ToString();
+
+            var model = JsonConvert.DeserializeObject<T>(modelString);
+
+            return View(model);
+        }
+
+
+        /// <summary>
+        /// Действие для коллекций
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        private IActionResult ReturnListModelInView<T>(string responseFromServer)
+        {
+            var modelString = JObject.Parse(responseFromServer)["result"]?["items"]?.ToString();
+
+            var model = JsonConvert.DeserializeObject<List<T>>(modelString);
+
+            return View(model);
+        }
+
+
+        /// <summary>
+        /// Проверка ответа с сервера и возврат результата
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="actionResult"></param>
+        /// <returns></returns>
+        private IActionResult ResponseHandler(string responseFromServer, IActionResult actionResult)
+        {
+            string? message;
+
+            int? status;
+
+            try
+            {
+                var response = JsonConvert.DeserializeObject<Response>(responseFromServer);
+
+                if (response?.ok == true)
+                {
+                    return actionResult;
+                }
+                else
+                {
+                    status = JObject.Parse(responseFromServer)["status_code"]?.Value<int>();
+                    message = JObject.Parse(responseFromServer)["result"]?.Value<string>();
+                }
+
+            }
+            catch
+            {
+                status = 400;
+                message = "Bad Request";
+            }
+
+            return Redirect($"/Error/{message}/{status}");
+        }
+
+
 
         #region Раздел Блогов
         /// <summary>
@@ -78,23 +146,15 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            var a = dataApi.GetBlogs();
+            var a = dataApi.GetModel("GetBlogs");
 
-            if (a != null)
-            {
-                string c = JArray.FromObject(a).ToString();
+            return ResponseHandler(a, ReturnListModelInView<Blogs>(a));
 
-                List<Blogs>? blogs = JsonConvert.DeserializeObject<List<Blogs>>(c);
-
-                return View(blogs);
-            }
-            else
-                return View();
         }
 
 
         /// <summary>
-        /// Вывод определенного проекта
+        /// Вывод определенного блога
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -105,21 +165,9 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            var a = dataApi.GetSelectedBlog(id);
+            var a = dataApi.GetSelectedModel("GetBlogs", id);
 
-            if (a != null)
-            {
-                string c = JObject.FromObject(a).ToString();
-
-                Blogs? blog = JsonConvert.DeserializeObject<Blogs>(c);
-
-                ViewData["title"] = blog.Title;
-
-                return View(blog);
-            }
-            else
-                return Redirect("/NotFound/");
-
+            return ResponseHandler(a, ReturnModelInView<Blogs>(a));
         }
 
 
@@ -147,10 +195,11 @@ namespace WebSite.Controllers
                 blog.Image = filePath;
             }
 
-            string? a = dataApi.EditBlog(blog);
+            var token = GetTokenFromCookie(HttpContext);
 
-            return Redirect($"/Admin/ViewBlog/{blog.Id}");
+            var a = dataApi.EditModel(new { token = token, model = blog}, "EditBlog");
 
+            return ResponseHandler(a, Redirect($"/Admin/ViewBlog/{blog.Id}"));
 
         }
 
@@ -175,29 +224,28 @@ namespace WebSite.Controllers
         /// <param name="formFile"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddBlog(Blogs blog, IFormFile formFile)
+        public IActionResult AddBlog(Blogs blog, IFormFile formFile)
         {
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
             if (formFile != null)
             {
-                string filePath = Path.GetTempFileName() + formFile.FileName;
-
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await formFile.CopyToAsync(stream);
-                }
-
                 blog.CreateDate = DateTime.Now;
-                blog.Image = filePath;
-                string? a = dataApi.AddBlog(blog);
 
-                return Redirect("/Admin/Blogs");
+                blog.Image = GetFile(formFile);
+
+                var token = GetTokenFromCookie(HttpContext);
+
+                var a = dataApi.AddModel(new { token = token, model = blog }, "AddBlog");
+
+                return ResponseHandler(a, Redirect("/Admin/Blogs"));
+
             }
             else
             {
                 ViewBag.Message = "Загрузите картинку!";
+
                 return View();
             }
         }
@@ -214,11 +262,11 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            Blogs blogs = new() { Id = Id };
+            string? token = GetTokenFromCookie(HttpContext);
 
-            string? a = dataApi.DeleteBlog(blogs);
+            string? a = dataApi.DeleteModel(new { token = token, model = Id }, "DeleteBlog");
 
-            return Redirect("/Admin/Blogs");
+            return ResponseHandler(a, Redirect("/Admin/Blogs"));
 
         }
         #endregion
@@ -234,18 +282,9 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            var a = dataApi.GetProjects();
+            var a = dataApi.GetModel("GetProjects");
 
-            if (a != null)
-            {
-                string c = JArray.FromObject(a).ToString();
-
-                List<Projects>? projects = JsonConvert.DeserializeObject<List<Projects>>(c);
-
-                return View(projects);
-            }
-            else
-                return View();
+            return ResponseHandler(a, ReturnListModelInView<Projects>(a));
         }
 
 
@@ -261,20 +300,9 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            var a = dataApi.GetSelectedProject(id);
+            var a = dataApi.GetSelectedModel("GetProjects", id);
 
-            if (a != null)
-            {
-                string c = JObject.FromObject(a).ToString();
-
-                Projects? project = JsonConvert.DeserializeObject<Projects>(c);
-
-                ViewData["title"] = project.Title;
-
-                return View(project);
-            }
-            else
-                return Redirect("/NotFound/");
+            return ResponseHandler(a, ReturnModelInView<Projects>(a));
 
         }
 
@@ -303,9 +331,11 @@ namespace WebSite.Controllers
                 project.Image = filePath;
             }
 
-            var a = dataApi.EditProject(project);
+            var token = GetTokenFromCookie(HttpContext);
 
-            return Redirect($"/Admin/ViewProject/{project.Id}");
+            var a = dataApi.EditModel(new { token = token, model = project }, "EditProject");
+
+            return ResponseHandler(a, Redirect($"/Admin/ViewProject/{project.Id}"));
 
         }
         
@@ -345,9 +375,13 @@ namespace WebSite.Controllers
                 }
 
                 project.Image = filePath;
-                string? a = dataApi.AddProject(project);
 
-                return Redirect("/Admin/Projects");
+                var token = GetTokenFromCookie(HttpContext);
+
+                var a = dataApi.AddModel(new { token = token, model = project }, "AddProject");
+
+                return ResponseHandler(a, Redirect("/Admin/Projects"));
+
             }
             else
             {
@@ -368,11 +402,11 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            Projects projects = new() { Id = Id };
-            
-            string? a = dataApi.DeleteProject(projects);
+            var token = GetTokenFromCookie(HttpContext);
 
-            return Redirect("/Admin/Projects");
+            var a = dataApi.DeleteModel(new { token = token, model = Id }, "DeleteProject");
+
+            return ResponseHandler(a, Redirect("/Admin/Projects"));
 
         }
         #endregion
@@ -388,18 +422,9 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            var a = dataApi.GetServices();
+            var a = dataApi.GetModel("GetServices");
 
-            if (a != null)
-            {
-                string? c = a.ToString();
-
-                List<Services>? services = JsonConvert.DeserializeObject<List<Services>>(c);
-
-                return View(services);
-            }
-            else
-                return View();
+            return ResponseHandler(a, ReturnListModelInView<Services>(a));
         }
 
 
@@ -414,9 +439,11 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            string? a = dataApi.EditService(service);
+            var token = GetTokenFromCookie(HttpContext);
 
-            return Redirect("/Admin/Services");
+            var a = dataApi.EditModel(new { token = token, model = service }, "EditService");
+
+            return ResponseHandler(a, Redirect("/Admin/Services"));
 
         }
 
@@ -446,9 +473,11 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            string? a = dataApi.AddService(service);
+            var token = GetTokenFromCookie(HttpContext);
 
-            return Redirect("/Admin/Services");
+            var a = dataApi.AddModel(new { token = token, model = service }, "AddService");
+
+            return ResponseHandler(a, Redirect("/Admin/Services"));
 
         }
 
@@ -459,22 +488,58 @@ namespace WebSite.Controllers
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult DeleteService(int Id) 
+        public IActionResult DeleteService(int Id)
         {
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            Services services = new() { Id = Id };
+            var token = GetTokenFromCookie(HttpContext);
 
-            string? a = dataApi.DeleteService(services);
+            var a = dataApi.DeleteModel(new { token = token, model = Id }, "DeleteService");
 
-            return Redirect("/Admin/Services");
-
+            return ResponseHandler(a, Redirect("/Admin/Services"));
         }
         #endregion
 
 
         #region Раздел Рабочий стол
+
+        /// <summary>
+        /// Создание MessageWithStatus 
+        /// </summary>
+        /// <param name="data1"></param>
+        /// <param name="data2"></param>
+        /// <returns></returns>
+        private MessageWithStatus? MessageWithStatusCreate(string data1, string data2)
+        {
+            try
+            {
+                var model1 = JsonConvert.DeserializeObject<Response>(data1);
+
+                var model2 = JsonConvert.DeserializeObject<Response>(data2);
+
+                if ((model1?.ok == true) && (model2?.ok == true))
+                {
+                    var modelStringData1 = JObject.Parse(data1)["result"]?["items"]?.ToString();
+
+                    var modelStringData2 = JObject.Parse(data2)["result"]?["items"]?.ToString();
+
+                    var modelMessages = JsonConvert.DeserializeObject<List<MessageStatus>>(modelStringData1);
+
+                    var modelStatuses = JsonConvert.DeserializeObject<List<Statuses>>(modelStringData2);
+
+                    var messageWithStatus = new MessageWithStatus() { messageStatus = modelMessages, statuses = modelStatuses };
+
+                    return messageWithStatus;
+                }
+
+            }
+            catch { }
+
+            return null;
+        }
+
+
         /// <summary>
         /// Рабочий стол
         /// </summary>
@@ -484,17 +549,19 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            object? a = dataApi.GetMessages();
-            object? status = dataApi.GetStatuses();
+            var token = GetTokenFromCookie(HttpContext);
 
-            MessageWithStatus? messageWithStatus = CreateMWS(a, status);
+            var messages = dataApi.GetModel(new { token = token }, "GetMessages");
+
+            var statuses = dataApi.GetModel(new { token = token }, "GetStatuses");
+
+            var messageWithStatus = MessageWithStatusCreate(messages, statuses);
 
             if (messageWithStatus != null)
-            {
                 return View(messageWithStatus);
-            }
+            
             else
-                return View();
+                return Redirect("/Error/Not Found/404");
         }
 
 
@@ -510,10 +577,14 @@ namespace WebSite.Controllers
         public MessageWithStatus? TableData(DateTime today, DateTime yesterday, DateTime week, DateTime month)
         {
             DateTime nullDate = new(0001, 01, 01, 0, 00, 00);
-            var a = dataApi.GetMessages();
-            var status = dataApi.GetStatuses();
 
-            MessageWithStatus? messageWithStatus = CreateMWS(a, status);
+            var token = GetTokenFromCookie(HttpContext);
+
+            var messages = dataApi.GetModel(new { token = token}, "GetMessages");
+
+            var statuses = dataApi.GetModel(new { token = token }, "GetStatuses");
+
+            var messageWithStatus = MessageWithStatusCreate(messages, statuses);
 
             MessageWithStatus? s = null;
 
@@ -574,11 +645,16 @@ namespace WebSite.Controllers
         public MessageWithStatus? AddFilter(string statusName)
         {
             DateTime nullDate = new DateTime(0001, 01, 01, 0, 00, 00);
-            object? a = dataApi.GetMessages();
-            object? status = dataApi.GetStatuses();
-            MessageWithStatus? s = null;
 
-            MessageWithStatus? messageWithStatus = CreateMWS(a, status);
+            var token = GetTokenFromCookie(HttpContext);
+
+            var messages = dataApi.GetModel(new { token = token }, "GetMessages");
+
+            var statuses = dataApi.GetModel(new { token = token }, "GetStatuses");
+
+            var messageWithStatus = MessageWithStatusCreate(messages, statuses);
+
+            MessageWithStatus? s = null;
 
             if (messageWithStatus != null)
             {
@@ -607,10 +683,14 @@ namespace WebSite.Controllers
         public MessageWithStatus? TableDataPeriod(DateTime date1, DateTime date2)
         {
             DateTime nullDate = new(0001, 01, 01, 0, 00, 00);
-            object? a = dataApi.GetMessages();
-            object? status = dataApi.GetStatuses();
 
-            MessageWithStatus? messageWithStatus = CreateMWS(a, status);
+            var token = GetTokenFromCookie(HttpContext);
+
+            var messages = dataApi.GetModel(new { token = token }, "GetMessages");
+
+            var statuses = dataApi.GetModel(new { token = token }, "GetStatuses");
+
+            var messageWithStatus = MessageWithStatusCreate(messages, statuses);
 
             MessageWithStatus? s = null;
 
@@ -661,7 +741,12 @@ namespace WebSite.Controllers
         [HttpPost]
         public string EditStatus(int id, string status)
         {
-            string? a = dataApi.EditStatus(id, status);
+            var token = GetTokenFromCookie(HttpContext);
+
+            var model = new { Id = id, Status = status };
+
+            string? a = dataApi.EditModel(new {token = token, model = model}, "EditStatus");
+
             return "Успешно";
         }
         #endregion
@@ -677,18 +762,9 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            var a = dataApi.GetMainPage();
+            var a = dataApi.GetModel("GetMainPage");
 
-            if (a != null)
-            {
-                string c = JObject.FromObject(a).ToString();
-
-                MainPageModel? mainPageModel = JsonConvert.DeserializeObject<MainPageModel>(c);
-
-                return View(mainPageModel);
-            }
-            else
-                return View();
+            return ResponseHandler(a, ReturnModelInView<MainPageModel>(a));
         }
 
 
@@ -703,14 +779,9 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-
-            var a = dataApi.EditMainPage(mainPageModel);
-
             if (formFile != null)
             {
-                var indexOfExtension = formFile.FileName.LastIndexOf('.');
-
-                string extension = formFile.FileName[(indexOfExtension + 1)..];
+                string extension = Path.GetExtension(formFile.FileName);
 
                 if ((extension == "png") || (extension == "jpg") || (extension == "jpeg"))
                 {
@@ -720,17 +791,21 @@ namespace WebSite.Controllers
                     await formFile.CopyToAsync(stream);
                 }
                 else
-                    return BadRequest("Допустимые форматы загрузки .jpg, .png, .jpeg");
+                    return Redirect("/Error/Допустимые форматы загрузки .jpg, .png, .jpeg/400");
             }
 
-            return Redirect("/Admin/Home");
+            var token = GetTokenFromCookie(HttpContext);
+
+            var a = dataApi.EditModel(new {model = mainPageModel, token = token }, "EditMainPage");
+
+            return ResponseHandler(a, Redirect("/Admin/Home"));
         }
         #endregion
 
 
         #region Раздел контактов
         /// <summary>
-        /// Контакты
+        /// Получить Контакты
         /// </summary>
         /// <returns></returns>
         public IActionResult Contacts()
@@ -738,18 +813,9 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            var a = dataApi.GetContacts();
+            var a = dataApi.GetModel("GetContacts");
 
-            if (a != null)
-            {
-                var c = a.ToString();
-
-                Contacts? contacts = JsonConvert.DeserializeObject<Contacts>(c);
-
-                return View(contacts);
-            }
-            else
-                return View();
+            return ResponseHandler(a, ReturnModelInView<Contacts>(a));
         }
 
 
@@ -764,10 +830,11 @@ namespace WebSite.Controllers
             if (GiveAccess() == false)
                 return Redirect("/Admin/Login");
 
-            string? a = dataApi.EditContacts(contacts);
+            var token = GetTokenFromCookie(HttpContext);
 
-            return Redirect("/Admin/Contacts");
+            var a = dataApi.EditModel(new {token = token, model = contacts }, "EditContacts");
 
+            return ResponseHandler(a, Redirect("/Admin/Contacts"));
 
         }
         #endregion
@@ -797,35 +864,48 @@ namespace WebSite.Controllers
             if (GiveAccess() == true)
                 return Redirect("/Admin");
 
-            var a = dataApi.GetUser(account);
+            var a = dataApi.GetToken(account);
 
-            if (a != null)
+            try
             {
-                if (a.ToString() == "")
-                {
-                    ViewData["Message"] = "Неправильная пара логин-пароль";
+                var response = JsonConvert.DeserializeObject<Response>(a);
 
-                }
-                else
+                if (response?.ok == true)
                 {
-                    Account? getAccount = JsonConvert.DeserializeObject<Account>(a.ToString());
+                    var token = JObject.Parse(a)["result"]?["token"]?.Value<string>();
+
+                    var role = JObject.Parse(a)["result"]?["role"]?.Value<string>();
 
                     string Host = Dns.GetHostName();
+
                     string IP = Dns.GetHostByName(Host).AddressList[1].ToString();
+
                     string userAgent = HttpContext.Request.Headers["User-Agent"];
 
                     HttpContext.Session.SetString("Login", account.Login); //установка куки
-                    HttpContext.Session.SetString("Role", getAccount.IdRole.ToString()); //установка куки
+                    HttpContext.Session.SetString("Role", role); //установка куки
                     HttpContext.Session.SetString("Host", Host); //установка куки
                     HttpContext.Session.SetString("IP", IP); //установка куки
                     HttpContext.Session.SetString("userAgent", userAgent); //установка куки
+                    HttpContext.Session.SetString("Token", token); //установка куки
                     return Redirect("/Admin");
                 }
+                else
+                {
+                    var description = JObject.Parse(a)["result"]?["description"]?.Value<string>();
+
+                    ViewData["Message"] = description;
+
+                    return View(account);
+                }
+
             }
-            else
-                ViewData["Message"] = "Ошибка соединения с сервером. Попробуйте немного позже повторить запрос.";
+            catch { }
+
+            ViewData["Message"] = "Ошибка соединения с сервером. Попробуйте немного позже повторить запрос.";
 
             return View(account);
+
         }
 
 
@@ -840,47 +920,6 @@ namespace WebSite.Controllers
             return Redirect("/");
         }
         #endregion
-
-
-        #region Раздел регистрации
-        /// <summary>
-        /// Страница регистрации
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Registration()
-        {
-            if (GiveAccess() == true)
-                return Redirect("/Admin");
-
-            return View();
-
-        }
-
-
-        /// <summary>
-        /// Обработчик регистрации
-        /// </summary>
-        /// <param name="registrationModel"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult Registration(Account account)
-        {
-            if (GiveAccess() == true)
-                return Redirect("/Admin");
-
-            var a = dataApi.RegistrationUser(account);
-
-            if (a.ToString() != "")
-            {
-                ViewData["Message"] = "Аккаунт успешно зарегистрирован";
-
-            }
-            else
-            {
-                ViewData["Message"] = "Аккаунт с таким логином уже существует!";
-            }
-            return View(account);
-        } 
-        #endregion
+        
     }
 }

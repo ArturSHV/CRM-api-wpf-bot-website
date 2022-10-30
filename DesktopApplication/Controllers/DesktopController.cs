@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using static ClassLibrary.GetApiData;
+using static DesktopApplication.Helpers.GetApiData;
 using PropertyChanged;
 using System.Collections;
 using System.Threading.Tasks;
-
+using DesktopApplication.Api;
+using DesktopApplication.Helpers;
 
 namespace DesktopApplication.Controllers
 {
@@ -19,7 +20,8 @@ namespace DesktopApplication.Controllers
     {
         StatusesModel statusesModel = new StatusesModel();
         MessagesModel messagesModel = new MessagesModel();
-        
+        DataApi dataApi = new DataApi();
+        MessageCreate messageCreate = new MessageCreate();
 
 
         /// <summary>
@@ -197,15 +199,10 @@ namespace DesktopApplication.Controllers
         /// </summary>
         private void GetStatuses()
         {
-            object status = PostData(statusesModel.urlGetStatuses);
+            var d = Token.token;
+            var status = dataApi.GetModel(new { token = Token.token }, statusesModel.urlGetStatuses);
 
-            if (status != null)
-            {
-                string s = JArray.FromObject(status).ToString();
-
-                statuses = JsonConvert.DeserializeObject<ObservableCollection<StatusesModel>>(s);
-
-            }
+            statuses = messageCreate.Response(status, messageCreate.ReturnListModelInView<StatusesModel>(status));
 
         }
 
@@ -214,15 +211,12 @@ namespace DesktopApplication.Controllers
         /// </summary>
         public void GetMessages()
         {
-            object a = PostData(messagesModel.urlGetMessages);
-            if (a != null)
-            {
-                string c = JArray.FromObject(a).ToString();
+            var a = dataApi.GetModel(new { token = Token.token }, messagesModel.urlGetMessages);
 
-                forMessages = JsonConvert.DeserializeObject<ObservableCollection<MessagesModel>>(c);
+            forMessages = messageCreate.Response(a, messageCreate.ReturnListModelInView<MessagesModel>(a));
 
-                messages = forMessages;
-            }
+            messages = forMessages;
+
         }
 
 
@@ -232,11 +226,12 @@ namespace DesktopApplication.Controllers
         /// <param name="id"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public string EditStatus(MessagesModel messagesModel)
+        public void EditStatus(MessagesModel messagesModel)
         {
-            string request = SendPostData(messagesModel.urlEditMessage, messagesModel);
-
-            return request;
+            string request = dataApi.EditModel(new {token = Token.token, model = messagesModel}, messagesModel.urlEditMessage);
+            
+            GetMessages();
+            
         }
     }
 }

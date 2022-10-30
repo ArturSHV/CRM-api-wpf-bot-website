@@ -13,17 +13,24 @@ namespace WebSite.Controllers
         {
             ViewData["title"] = "Контакты";
 
-            var a = dataApi.GetContacts();
-            if (a != null)
+            var a = dataApi.GetModel("GetContacts");
+            try
             {
-                string c = JObject.FromObject(a).ToString();
+                var response = JsonConvert.DeserializeObject<Response>(a);
 
-                Contacts? contacts = JsonConvert.DeserializeObject<Contacts>(c);
+                if (response?.ok == true)
+                {
+                    var contactsString = JObject.Parse(a)["result"]?["items"]?.ToString();
 
-                return View(contacts);
+                    var contacts = JsonConvert.DeserializeObject<Contacts>(contactsString);
+
+                    return View(contacts);
+                }
+
             }
-            else
-                return View();
+            catch { }
+
+            return View();
         }
     }
 }
