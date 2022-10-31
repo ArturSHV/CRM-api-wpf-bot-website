@@ -1,9 +1,8 @@
 ﻿using DesktopApplication.Api;
+using DesktopApplication.Helpers;
 using DesktopApplication.Models;
-using Newtonsoft.Json;
 using PropertyChanged;
 using System.Collections.Generic;
-using DesktopApplication.Helpers;
 
 
 

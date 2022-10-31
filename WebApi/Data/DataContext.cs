@@ -23,7 +23,7 @@ namespace WebApi.Data
         public DataContext(DbContextOptions<DataContext> options)
         : base(options)
         {
-            Database.EnsureDeleted();
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
