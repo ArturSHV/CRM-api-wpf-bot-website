@@ -8,7 +8,8 @@ namespace TelegramBot.Helpers
         public static string? ReturnHostString()
         {
             string workingDirectory = Environment.CurrentDirectory;
-            var filePath = Path.Combine(workingDirectory, "appsettings.json");
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            var filePath = Path.Combine(projectDirectory, "appsettings.json");
             string json = File.ReadAllText(filePath);
             var host = JObject.Parse(json)["Host"]?.Value<string>();
             return host;
