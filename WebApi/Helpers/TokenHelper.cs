@@ -22,8 +22,8 @@ namespace WebApi.Helpers
             
             var nameClaimType = claimTypeModel.GetType().Name;
 
-            var myIssuer = "https://localhost:44301";
-            var myAudience = "https://localhost:44301";
+            var myIssuer = SettingsHelpers.ReturnHostString();
+            var myAudience = SettingsHelpers.ReturnHostString();
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -81,8 +81,8 @@ namespace WebApi.Helpers
             var mySecret = "asdv234234^&%&^%&^hjsdfb2%%%";
             var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(mySecret));
 
-            var myIssuer = "https://localhost:44301";
-            var myAudience = "https://localhost:44301";
+            var myIssuer = SettingsHelpers.ReturnHostString();
+            var myAudience = SettingsHelpers.ReturnHostString();
 
             var tokenHandler = new JwtSecurityTokenHandler();
             try

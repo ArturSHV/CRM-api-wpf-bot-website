@@ -1,9 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApi.Controllers;
 using WebApi.Data;
-using WebApi.Helpers;
-using WebApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);

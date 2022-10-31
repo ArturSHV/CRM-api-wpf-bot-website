@@ -199,7 +199,6 @@ namespace DesktopApplication.Controllers
         /// </summary>
         private void GetStatuses()
         {
-            var d = Token.token;
             var status = dataApi.GetModel(new { token = Token.token }, statusesModel.urlGetStatuses);
 
             statuses = messageCreate.Response(status, messageCreate.ReturnListModelInView<StatusesModel>(status));

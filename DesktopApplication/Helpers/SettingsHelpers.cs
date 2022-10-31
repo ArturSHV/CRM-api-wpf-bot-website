@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.IO;
 
-namespace WebApi.Helpers
+namespace DesktopApplication.Helpers
 {
     public static class SettingsHelpers
     {
-        public static string? ReturnHostString()
+        public static string ReturnHostString()
         {
             string workingDirectory = Environment.CurrentDirectory;
             var filePath = Path.Combine(workingDirectory, "appsettings.json");

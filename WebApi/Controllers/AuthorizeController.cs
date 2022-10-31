@@ -1,7 +1,6 @@
-﻿using WebApi.Data;
-using WebApi.Helpers;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Data;
 using WebApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using static WebApi.Helpers.HashPasswordHelper;
 using static WebApi.Helpers.TokenHelper;
 using static WebApi.Models.ErrorMessages;

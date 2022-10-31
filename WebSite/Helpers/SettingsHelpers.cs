@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace WebApi.Helpers
+namespace WebSite.Helpers
 {
     public static class SettingsHelpers
     {

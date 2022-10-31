@@ -1,13 +1,10 @@
 ﻿using DesktopApplication.Api;
+using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.View;
-using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using DesktopApplication.Helpers;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 namespace DesktopApplication
 {

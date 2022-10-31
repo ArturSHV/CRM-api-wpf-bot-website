@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Telegram.Bot.Types.ReplyMarkups;
+﻿using Telegram.Bot.Types.ReplyMarkups;
 using TelegramBot.Api;
 using TelegramBot.Helpers;
 using TelegramBot.Models;
@@ -38,11 +37,16 @@ namespace TelegramBot
         /// <returns></returns>
         public List<KeyboardButton[]> GetButtons(IEnumerable<Model> models)
         {
-            foreach (var item in models)
+            if (models != null)
             {
-                buttons.Add(new KeyboardButton[] { item.Title });
+                foreach (var item in models)
+                {
+                    buttons.Add(new KeyboardButton[] { item.Title });
+                }
+                buttons.Add(new KeyboardButton[] { "На главную" });
             }
-            buttons.Add(new KeyboardButton[] {"На главную"});
+            else
+                buttons.Add(new KeyboardButton[] { "Отсутствует соединение с сервером" });
             return buttons;
         }
 

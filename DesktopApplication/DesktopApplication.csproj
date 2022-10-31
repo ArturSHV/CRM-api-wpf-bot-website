@@ -103,6 +103,7 @@
     <Compile Include="Api\DataApi.cs" />
     <Compile Include="Helpers\GetApiData.cs" />
     <Compile Include="Helpers\MessageCreate.cs" />
+    <Compile Include="Helpers\SettingsHelpers.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\ContactsModel.cs" />
     <Compile Include="Models\IModel.cs" />
@@ -218,6 +219,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="appsettings.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

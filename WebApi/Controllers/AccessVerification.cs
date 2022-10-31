@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using WebApi.Data;
 using WebApi.Helpers;
 using WebApi.Models;
-using WebApi.Data;
-using Newtonsoft.Json.Linq;
-using static WebApi.Models.ErrorMessages;
 
 namespace WebApi.Controllers;
 

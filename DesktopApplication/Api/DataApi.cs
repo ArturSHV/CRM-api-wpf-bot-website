@@ -1,4 +1,5 @@
-﻿using DesktopApplication.Models;
+﻿using DesktopApplication.Helpers;
+using DesktopApplication.Models;
 using static DesktopApplication.Helpers.GetApiData;
 
 namespace DesktopApplication.Api
@@ -11,7 +12,7 @@ namespace DesktopApplication.Api
         /// <returns></returns>
         public string GetToken(Account account)
         {
-            string url = $@"https://localhost:44369/api/Authorize/";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/Authorize/";
 
             var a = SendPostData(url, account);
 
@@ -26,7 +27,7 @@ namespace DesktopApplication.Api
         /// <returns></returns>
         public string EditModel<T>(T model, string methodName)
         {
-            string url = $@"https://localhost:44369/api/{methodName}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}";
 
             var request = SendPostData(url, model);
 
@@ -41,7 +42,7 @@ namespace DesktopApplication.Api
         /// <returns></returns>
         public string DeleteModel<T>(T model, string methodName)
         {
-            string url = $@"https://localhost:44369/api/{methodName}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}";
 
             var request = SendPostData(url, model);
 
@@ -56,7 +57,7 @@ namespace DesktopApplication.Api
         /// <returns></returns>
         public string AddModel<T>(T model, string methodName)
         {
-            string url = $@"https://localhost:44369/api/{methodName}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}";
 
             var request = SendPostData(url, model);
 
@@ -70,7 +71,7 @@ namespace DesktopApplication.Api
         /// <returns></returns>
         public string GetModel(string methodName)
         {
-            string url = $@"https://localhost:44369/api/{methodName}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}";
 
             var a = PostData(url);
 
@@ -84,7 +85,7 @@ namespace DesktopApplication.Api
         /// <returns></returns>
         public string GetModel<T>(T model, string methodName)
         {
-            string url = $@"https://localhost:44369/api/{methodName}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}";
 
             var request = SendPostData(url, model);
 
@@ -98,7 +99,7 @@ namespace DesktopApplication.Api
         /// <returns></returns>
         public string GetSelectedModel(string methodName, int id)
         {
-            string url = $@"https://localhost:44369/api/{methodName}/{id}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}/{id}";
 
             var a = GetData(url);
 

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Data;
-using WebApi.Helpers;
 
 namespace WebApi.Controllers
 {

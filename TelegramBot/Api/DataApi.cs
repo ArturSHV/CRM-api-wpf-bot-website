@@ -1,4 +1,4 @@
-﻿using TelegramBot.Models;
+﻿using TelegramBot.Helpers;
 using static TelegramBot.Helpers.GetApiData;
 
 
@@ -14,7 +14,7 @@ namespace TelegramBot.Api
         /// <returns></returns>
         public string AddModel<T>(T model, string methodName)
         {
-            string url = $@"https://localhost:44369/api/{methodName}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}";
 
             var request = SendPostData(url, model);
 
@@ -28,7 +28,7 @@ namespace TelegramBot.Api
         /// <returns></returns>
         public string GetModel(string methodName)
         {
-            string url = $@"https://localhost:44369/api/{methodName}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}";
 
             var a = PostData(url);
 
@@ -41,7 +41,7 @@ namespace TelegramBot.Api
         /// <returns></returns>
         public string GetSelectedModel(string methodName, int id)
         {
-            string url = $@"https://localhost:44369/api/{methodName}/{id}";
+            string url = $"{SettingsHelpers.ReturnHostString()}api/{methodName}/{id}";
 
             var a = GetData(url);
 

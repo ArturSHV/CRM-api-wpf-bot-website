@@ -10,7 +10,7 @@ namespace WebApi.Helpers
         /// </summary>
         /// <param name="uploadedFile"></param>
         /// <returns></returns>
-        public static async Task<string> GetFile(string uploadedFile, IWebHostEnvironment _appEnvironment)
+        public async static Task<string> GetFile(string uploadedFile, IWebHostEnvironment _appEnvironment)
         {
 
             string directoryPath = Path.Combine(_appEnvironment.ContentRootPath, "wwwroot/img");

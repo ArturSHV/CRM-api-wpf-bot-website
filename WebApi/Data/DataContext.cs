@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore;
-using System.Data.Entity.Migrations;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Helpers;
 using WebApi.Models;
 
@@ -10,7 +7,7 @@ namespace WebApi.Data
 {
     public class DataContext : DbContext
     {
-        private string url = "https://localhost:44369/";
+        private string? url = SettingsHelpers.ReturnHostString();
         public DbSet<Message> Messages { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Service> Services { get; set; }
