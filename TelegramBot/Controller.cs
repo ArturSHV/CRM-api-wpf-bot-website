@@ -43,10 +43,10 @@ namespace TelegramBot
                 {
                     buttons.Add(new KeyboardButton[] { item.Title });
                 }
-                buttons.Add(new KeyboardButton[] { "На главную" });
             }
-            else
-                buttons.Add(new KeyboardButton[] { "Отсутствует соединение с сервером" });
+
+            buttons.Add(new KeyboardButton[] { "На главную" });
+
             return buttons;
         }
 
