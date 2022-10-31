@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace WebSite.Models
+﻿namespace WebSite.Models
 {
     public class MainPageModel : IModel
     {
